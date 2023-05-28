@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rigidBody;
     private PlayerInputActions _playerInputActions;
 
-    private Vector3 _currentDisplacement;
+    private Vector2 _currentMovementDirection;
     
     private void Awake()
     {
@@ -25,18 +25,18 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         GatherInput();
-    }
-
-    private void FixedUpdate()
-    {
-        _rigidBody.MovePosition(_rigidBody.position + _currentDisplacement * Time.fixedDeltaTime);
+        Move();
     }
 
     private void GatherInput()
     {
-        var movementDirection = _playerInputActions.Player.Movement.ReadValue<Vector2>().normalized;
-        _currentDisplacement = new Vector3 (movementDirection.x, 0, movementDirection.y) * _speed;
-        // Debug.Log();
+        _currentMovementDirection = _playerInputActions.Player.Movement.ReadValue<Vector2>().normalized;
+    }
+
+    private void Move()
+    {
+        var newVelocity = _currentMovementDirection * _speed;
+        _rigidBody.velocity = new Vector3 (newVelocity.x, _rigidBody.velocity.y, newVelocity.y);
     }
     
     private void OnInputMovementPerformed(InputAction.CallbackContext context)
