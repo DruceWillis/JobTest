@@ -3,37 +3,39 @@ using UnityEngine;
 
 public class MouseAimCamera : MonoBehaviour {
 
-    public GameObject target;
+    [SerializeField] private Transform _target;
 
-    public float rotateSpeed = 5;
-
-    Vector3 offset;
+    private Vector3 _offset;
 
     private Transform _cachedTransform;
+    private float _cameraEulerOffsetX;
 
     private void Awake()
     {
         _cachedTransform = transform;
+        _cameraEulerOffsetX = -20f;
+        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
-    void Start() {
-
-        offset = target.transform.position - new Vector3(-1, 2, 6);
-        Cursor.visible = false;
+    public void SetTarget(Transform target)
+    {
+        _target = target;
+        _offset = target.transform.position - new Vector3(-1, 0, 7);
     }
 
     void LateUpdate()
     {
-        
-        float desiredAngle = target.transform.eulerAngles.y;
-
+        float desiredAngle = _target.eulerAngles.y;
         Quaternion rotation = Quaternion.Euler(0, desiredAngle, 0);
 
-        _cachedTransform.position = target.transform.position - (rotation * offset);
+        _cachedTransform.position = _target.position - rotation * _offset;
 
-        _cachedTransform.LookAt(target.transform);
-
-        _cachedTransform.eulerAngles += new Vector3(-20, 0, 0);
+        _cachedTransform.LookAt(_target);
+        // _cameraEulerOffsetX -= Input.GetAxis("Mouse Y");
+        // _cameraEulerOffsetX = Mathf.Clamp(_cameraEulerOffsetX, -25, -15);
+        // _cachedTransform.eulerAngles += new Vector3(_cameraEulerOffsetX, 0, 0);
     }
 
 }

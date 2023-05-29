@@ -31,12 +31,11 @@ public abstract class BaseBattleEntity : MonoBehaviour
         
         OnReceiveDamage?.Invoke();
     }
-
-    protected virtual void Attack() {}
-
-    protected virtual void Move() {}
     
+    protected virtual void Move() {}
     protected virtual void Rotate() {}
+    protected virtual void Attack() {}
+    protected virtual void HandleAnimation() {}
 
     protected virtual void Die()
     {

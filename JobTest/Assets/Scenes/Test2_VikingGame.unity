@@ -304,8 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd846692e432453bba276a6c2fd0bf13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 2043468890}
-  rotateSpeed: 5
+  _target: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,8 +455,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34adae4bbc038ae4eab2cea1d4869a84, type: 3}
---- !u!1 &2043468890 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7421473208495486771, guid: 34adae4bbc038ae4eab2cea1d4869a84, type: 3}
-  m_PrefabInstance: {fileID: 710903469}
-  m_PrefabAsset: {fileID: 0}
