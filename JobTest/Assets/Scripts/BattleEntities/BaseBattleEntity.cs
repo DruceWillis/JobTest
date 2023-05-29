@@ -1,26 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BaseBattleEntity : MonoBehaviour
 {
-    [SerializeField]
+    protected Action OnReceiveDamage;
+    protected Action OnDie;
+    
     protected eBattleEntityType _entityType;
     protected int _health;
     protected int _damage;
 
-    public void Initialize(BattleEntityData data)
+    public virtual void Initialize(BattleEntityData data)
     {
-        
+        _entityType = data.EntityType;
+        _health = data.Health;
+        _damage = data.Damage;
     }
     
-    public void TakeHit()
+    public virtual void ReceiveDamage(int damage)
     {
+        _health -= damage;
+
+        if (_health <= 0)
+        {
+            Die();
+            return;
+        }
         
+        OnReceiveDamage?.Invoke();
     }
 
-    public void Attack()
+    protected virtual void Attack() {}
+
+    protected virtual void Move() {}
+    
+    protected virtual void Rotate() {}
+
+    protected virtual void Die()
     {
-        
+        OnDie?.Invoke();
     }
 }
