@@ -27,8 +27,10 @@ public class MouseAimCamera : MonoBehaviour
         float desiredAngle = _target.eulerAngles.y;
         Quaternion rotation = Quaternion.Euler(0, desiredAngle, 0);
 
-        _cachedTransform.position = _target.position - rotation * _offset;
-
+        var calculatedPos = _target.position - rotation * _offset;
+        var newPos = new Vector3(calculatedPos.x, _offset.y, calculatedPos.z);
+        
+        _cachedTransform.position = newPos;
         _cachedTransform.LookAt(_target);
     }
 

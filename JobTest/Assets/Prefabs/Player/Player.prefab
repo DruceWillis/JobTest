@@ -107,8 +107,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6752b928d9ee6fa4889a23f70bdd8480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponColliders:
-  - {fileID: 6037835790168244980}
   _animator: {fileID: 456116270818557099}
   _movementSpeed: 5
   _rotationSpeed: 50
@@ -180,10 +178,5 @@ Transform:
 --- !u!95 &456116270818557099 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 7612596136846239431, guid: a396048c3fee31542a81901b0d2b871b, type: 3}
-  m_PrefabInstance: {fileID: 8066277398163839596}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &6037835790168244980 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 4340237659181881496, guid: a396048c3fee31542a81901b0d2b871b, type: 3}
   m_PrefabInstance: {fileID: 8066277398163839596}
   m_PrefabAsset: {fileID: 0}

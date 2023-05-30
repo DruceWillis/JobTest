@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,10 +7,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BattleEntitiesConfig", menuName = "Configs/BattleEntitiesConfig", order = 0)]
 public class BattleEntitiesConfig : ScriptableObject
 {
-    [SerializeField] private List<BattleEntityData> _battleEntities;
+    [SerializeField] private List<BattleEntity> _battleEntities;
 
-    public BattleEntityData GetBattleEntityDataByType(eBattleEntityType type)
+    public BattleEntity GetBattleEntityByType(eBattleEntityType type)
     {
-        return _battleEntities.First(be => be.EntityType == type);
+        return _battleEntities.First(be => be.Data.EntityType == type);
     }
+}
+
+[Serializable]
+public class BattleEntity
+{
+    public BaseBattleEntity Prefab;
+    public BattleEntityData Data;
 }

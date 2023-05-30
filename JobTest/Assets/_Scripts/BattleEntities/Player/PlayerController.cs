@@ -26,14 +26,10 @@ public class PlayerController : MeleeBattleEntity
 
     private bool _successfullyInitialized;
 
-    private void Awake()
-    {
-        Initialize(null);
-    }
 
     public override void Initialize(BattleEntityData data)
     {
-        // base.Initialize(data);
+        base.Initialize(data);
         
         _playerInputActions = new PlayerInputActions();
         _playerInputActions.Player.Enable();
@@ -43,9 +39,7 @@ public class PlayerController : MeleeBattleEntity
         _animationFunctionEventHandler = _vikingModelTransform.GetComponent<AnimationFunctionEventHandler>();
         
         _rigidBody = GetComponent<Rigidbody>();
-        
-        _camera = Camera.main;
-        
+
         InitializeWeaponControllers(() =>
         {
             _animationFunctionEventHandler.Initialize(_animatorController, ref _weaponColliders);
@@ -59,6 +53,11 @@ public class PlayerController : MeleeBattleEntity
         {
             aimCamera.SetTarget(_cameraFocusTransform);
         }
+    }
+
+    public void SetPlayerCamera(Camera cam)
+    {
+        _camera = cam;
     }
 
     private void Update()

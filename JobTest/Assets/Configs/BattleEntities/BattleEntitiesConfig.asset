@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BattleEntitiesConfig
   m_EditorClassIdentifier: 
   _battleEntities:
-  - {fileID: 11400000, guid: 248ea938c1abbf341ada301f895b31b0, type: 2}
-  - {fileID: 11400000, guid: 8cd984120e9c2c34781d5b916df805be, type: 2}
+  - Prefab: {fileID: 7861708403523953443, guid: 34adae4bbc038ae4eab2cea1d4869a84, type: 3}
+    Data: {fileID: 11400000, guid: 8cd984120e9c2c34781d5b916df805be, type: 2}
