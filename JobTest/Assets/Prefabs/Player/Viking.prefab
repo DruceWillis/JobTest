@@ -921,6 +921,63 @@ Transform:
   m_Father: {fileID: 7026502333848149065}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3047312772056243536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8996337317819720710}
+  - component: {fileID: 4340237659181881496}
+  - component: {fileID: 668201382766431319}
+  m_Layer: 0
+  m_Name: AxeCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8996337317819720710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3047312772056243536}
+  m_LocalRotation: {x: 0, y: 0.1621205, z: 0, w: 0.986771}
+  m_LocalPosition: {x: 0.416, y: -0.039, z: 0.716}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6801316859573466427}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 18.66, z: 0}
+--- !u!65 &4340237659181881496
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3047312772056243536}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.18, z: 0.75}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &668201382766431319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3047312772056243536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff263435f1f4701a132359cd650ab11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3051331352392090443
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,6 +1010,7 @@ Transform:
   - {fileID: 9175281633810392628}
   - {fileID: 837915501633171338}
   - {fileID: 3229300105096848148}
+  - {fileID: 8996337317819720710}
   m_Father: {fileID: 14331052568851661}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1244,6 +1302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4559176705746861245}
   - component: {fileID: 7612596136846239431}
+  - component: {fileID: 156175868}
   m_Layer: 0
   m_Name: Viking
   m_TagString: Untagged
@@ -1258,7 +1317,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3751115457788552711}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1277,10 +1336,10 @@ Animator:
   m_GameObject: {fileID: 3751115457788552711}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: d1d65d8f8da97374cb338d0c738e2756, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9d40a0b1b7221094fafcd232a2602d44, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -1288,6 +1347,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &156175868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3751115457788552711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d0fd45450a57554580bd67edb25a1b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3780262086647567369
 GameObject:
   m_ObjectHideFlags: 0

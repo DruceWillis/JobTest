@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
-public class PlayerController : BaseBattleEntity
+public class PlayerController : MeleeBattleEntity
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private float _movementSpeed = 5f;
@@ -11,32 +11,46 @@ public class PlayerController : BaseBattleEntity
     [SerializeField] private float _rotationTowardsDirectionSpeed = 40f;
     [SerializeField] private Transform _vikingModelTransform;
     [SerializeField] private Transform _cameraFocusTransform;
-    
+
     private PlayerInputActions _playerInputActions;
-    private BasicHumanoidAnimatorController _basicAnimatorController;
-    
+    private BasicAnimatorController _animatorController;
+    private AnimationFunctionEventHandler _animationFunctionEventHandler;
+
     private Rigidbody _rigidBody;
     private Camera _camera;
 
-    private eHumanoidBattleEntityState _state;
     private Vector3 _currentMovementDirection;
     private float _horizontalMouseMovement;
     private bool _initiatedAttack;
+    private bool _isDead;
 
     private bool _successfullyInitialized;
-    
+
     private void Awake()
     {
-        _state = eHumanoidBattleEntityState.Idle;
+        Initialize(null);
+    }
+
+    public override void Initialize(BattleEntityData data)
+    {
+        // base.Initialize(data);
         
         _playerInputActions = new PlayerInputActions();
         _playerInputActions.Player.Enable();
 
-        _basicAnimatorController = new BasicHumanoidAnimatorController(_animator);
+        _animatorController = new BasicAnimatorController(_animator);
+
+        _animationFunctionEventHandler = _vikingModelTransform.GetComponent<AnimationFunctionEventHandler>();
         
         _rigidBody = GetComponent<Rigidbody>();
         
         _camera = Camera.main;
+        
+        InitializeWeaponControllers(() =>
+        {
+            _animationFunctionEventHandler.Initialize(_animatorController, ref _weaponColliders);
+        });
+        
         _successfullyInitialized = !HasNullReferences();
 
         if (!_successfullyInitialized) return;
@@ -49,47 +63,14 @@ public class PlayerController : BaseBattleEntity
 
     private void Update()
     {
-        if (!_successfullyInitialized) return;
+        if (!_successfullyInitialized || _isDead) return;
 
         HandleInput();
         Move();
         Rotate();
         HandleAnimation();
         ResetNecessaryInput();
-        
-        
     }
-
-    /*
-    private void HandleIdleState()
-    {
-        GatherInput();
-        Move();
-        Rotate();
-    }
-    
-    private void HandleRunningState()
-    {
-        GatherInput();
-        Move();
-        Rotate();
-    }
-    
-    private void HandleAttackingState()
-    {
-        
-    }
-    
-    private void HandleReceivingDamageState()
-    {
-        
-    }
-    
-    private void HandleDieState()
-    {
-        
-    }
-    */
 
     private void HandleInput()
     {
@@ -140,20 +121,32 @@ public class PlayerController : BaseBattleEntity
         _initiatedAttack = true;
     }
 
+    protected override void Die()
+    {
+        base.Die();
+        _isDead = true;
+        _rigidBody.velocity = Vector3.zero;
+    }
+
     protected override void HandleAnimation()
     {
+        // FOR DEBUGGING PURPOSES
         bool rh = Input.GetKeyDown(KeyCode.H);
+        _isDead = Input.GetKeyDown(KeyCode.T);
+        if (_isDead)
+            _rigidBody.velocity = Vector3.zero;
+
         Helpers.AnimatorUpdateData animatorUpdateData = new Helpers.AnimatorUpdateData
         {
             Speed = _currentMovementDirection.magnitude,
             ReceivedHit = rh,
             InitiatedAttack = _initiatedAttack,
-            Died = false
+            Died = _isDead
         };
-        _basicAnimatorController.Update(animatorUpdateData);
+        _animatorController.Update(animatorUpdateData);
     }
     
-    private bool HasNullReferences()
+    protected override bool HasNullReferences()
     {
         if (_camera == null)
         {
@@ -166,16 +159,20 @@ public class PlayerController : BaseBattleEntity
             Debug.LogError("Didn't find main animator");
             return true;
         }
-
-        return false;
-    }
-    
-    
-    // ANIMATION EVENTS
-
-    public void SetAttackPermission()
-    {
         
+        if (_animationFunctionEventHandler == null)
+        {
+            Debug.LogError("Didn't find animation function event handler");
+            return true;
+        }
+
+        if (_weaponColliders.Count <= 0)
+        {
+            Debug.LogError("Didn't find weapon colliders");
+            return true;
+        }
+        
+        return false;
     }
 
 }

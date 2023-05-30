@@ -1,22 +1,24 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BaseBattleEntity : MonoBehaviour
 {
+    protected BattleEntityData _data;
+ 
     protected Action OnReceiveDamage;
     protected Action OnDie;
     
     protected eBattleEntityType _entityType;
     protected int _health;
-    protected int _damage;
+    protected int _baseDamage;
+
+    public eBattleEntityType EntityType => _entityType;
 
     public virtual void Initialize(BattleEntityData data)
     {
         _entityType = data.EntityType;
         _health = data.Health;
-        _damage = data.Damage;
+        _baseDamage = data.BaseDamage;
     }
     
     public virtual void ReceiveDamage(int damage)
@@ -41,4 +43,6 @@ public abstract class BaseBattleEntity : MonoBehaviour
     {
         OnDie?.Invoke();
     }
+
+    protected abstract bool HasNullReferences();
 }
