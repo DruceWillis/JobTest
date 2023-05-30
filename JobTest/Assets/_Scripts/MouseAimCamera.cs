@@ -9,18 +9,16 @@ public class MouseAimCamera : MonoBehaviour
 
     private Transform _cachedTransform;
 
-    private void Awake()
+    public void SetTarget(Transform target)
     {
         _cachedTransform = transform;
         
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
-    }
-
-    public void SetTarget(Transform target)
-    {
+        
         _target = target;
-        _offset = target.transform.position - new Vector3(-1, 0, 7);
+        _offset = target.position - new Vector3(-1, -1.5f, 8.5f);
+        _cachedTransform.position = _offset;
         enabled = true;
     }
 

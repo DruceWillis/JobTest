@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: VikingData
   m_EditorClassIdentifier: 
   _health: 20
-  _damage: 1
+  _baseDamage: 0
+  _weapon: {fileID: 11400000, guid: a58af9f3cc33ba642b20835f118b6ea8, type: 2}
   _entityType: 0
