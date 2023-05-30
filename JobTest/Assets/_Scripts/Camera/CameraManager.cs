@@ -19,7 +19,7 @@ public class CameraManager : MonoBehaviour
     {
         switch (state)
         {
-            case eGameState.InMainMenu:
+            case eGameState.MainMenu:
                 OnOpenMainMenu();
                 break;
             case eGameState.Fighting:
@@ -30,8 +30,8 @@ public class CameraManager : MonoBehaviour
 
     private void OnOpenMainMenu()
     {
-        _cinemachineBrain.enabled = true;
         _dollyCart.m_Position = 0f;
+        _cinemachineBrain.enabled = true;
     }
     
     private void OnStartFighting()

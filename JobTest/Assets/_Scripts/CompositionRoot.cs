@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CompositionRoot : MonoBehaviour
@@ -10,6 +9,8 @@ public class CompositionRoot : MonoBehaviour
 
     private PlayerController _playerController;
 
+    private bool _initializedPlayer;
+    
     private void Awake()
     {
         if (_playerSpawnPoint == null)
@@ -17,23 +18,63 @@ public class CompositionRoot : MonoBehaviour
             Debug.LogError("Player spawn point wasn't assigned");
         }
 
-        // return;
-
+        GameStateController.Instance.OnGameStateChanged += OnGameStateChanged;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            var vikingBattleEntity = _battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Viking);
             GameStateController.Instance.GameState = eGameState.Fighting;
-            _playerController = Instantiate(vikingBattleEntity.Prefab, _playerSpawnPoint.position, Quaternion.identity).GetComponent<PlayerController>();
-            _playerController.SetPlayerCamera(_cameraManager.Camera);
-            _playerController.Initialize(vikingBattleEntity.Data);
+
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
-            GameStateController.Instance.GameState = eGameState.InMainMenu;
+            GameStateController.Instance.GameState = eGameState.MainMenu;
         }
+    }
+    
+    private void OnGameStateChanged(eGameState state)
+    {
+        switch (state)
+        {
+            case eGameState.MainMenu:
+                OnOpenMainMenu();
+                break;
+            case eGameState.Fighting:
+                OnStartFighting();
+                break;
+        }
+    }
+    
+    private void OnOpenMainMenu()
+    {
+        _playerController.gameObject.SetActive(false);
+    }
+    
+        
+    private void OnStartFighting()
+    {
+        if (_initializedPlayer)
+        {
+            _playerController.transform.position = _playerSpawnPoint.position;
+            _playerController.transform.rotation = _playerSpawnPoint.rotation;
+            _playerController.ResetValues();
+            _playerController.gameObject.SetActive(true);
+        }
+        else
+        {
+            var vikingBattleEntity = _battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Viking);
+            _playerController = Instantiate(vikingBattleEntity.Prefab, _playerSpawnPoint.position, Quaternion.identity)
+                .GetComponent<PlayerController>();
+            _playerController.SetPlayerCamera(_cameraManager.Camera);
+            _playerController.Initialize(vikingBattleEntity.Data);
+            _initializedPlayer = true;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameStateController.Instance.OnGameStateChanged -= OnGameStateChanged;
     }
 }

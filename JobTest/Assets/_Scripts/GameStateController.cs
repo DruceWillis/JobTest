@@ -28,13 +28,13 @@ public class GameStateController
         if (_instance != null) return; 
         
         _instance = this;
-        _gameState = eGameState.InMainMenu;
+        _gameState = eGameState.MainMenu;
     }
 }
 
 public enum eGameState
 {
-    InMainMenu,
+    MainMenu,
     Fighting,
     GameOverScreen
 }

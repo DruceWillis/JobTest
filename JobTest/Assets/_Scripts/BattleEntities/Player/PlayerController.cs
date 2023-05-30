@@ -55,6 +55,13 @@ public class PlayerController : MeleeBattleEntity
         }
     }
 
+    public override void ResetValues()
+    {
+        base.ResetValues();
+        _isDead = false;
+        _animatorController.ResetValues();
+    }
+
     public void SetPlayerCamera(Camera cam)
     {
         _camera = cam;
@@ -131,9 +138,8 @@ public class PlayerController : MeleeBattleEntity
     {
         // FOR DEBUGGING PURPOSES
         bool rh = Input.GetKeyDown(KeyCode.H);
-        _isDead = Input.GetKeyDown(KeyCode.T);
-        if (_isDead)
-            _rigidBody.velocity = Vector3.zero;
+        if (rh)
+            ReceiveDamage(10);
 
         Helpers.AnimatorUpdateData animatorUpdateData = new Helpers.AnimatorUpdateData
         {

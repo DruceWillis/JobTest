@@ -16,9 +16,15 @@ public abstract class BaseBattleEntity : MonoBehaviour
 
     public virtual void Initialize(BattleEntityData data)
     {
-        _entityType = data.EntityType;
-        _health = data.Health;
-        _baseDamage = data.BaseDamage;
+        _data = data;
+        _entityType = _data.EntityType;
+        _health = _data.Health;
+        _baseDamage = _data.BaseDamage;
+    }
+
+    public virtual void ResetValues()
+    {
+        _health = _data.Health;
     }
     
     public virtual void ReceiveDamage(int damage)

@@ -9,7 +9,6 @@ public class BasicAnimatorController
     private bool _isDead;
     
     private static readonly int IsRunning = Animator.StringToHash("IsRunning");
-    private static readonly int CanAttack = Animator.StringToHash("CanAttack");
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int Die = Animator.StringToHash("Die");
     
@@ -18,7 +17,12 @@ public class BasicAnimatorController
     {
         _animator = animator;
         _canAttack = true;
-        _animator.SetBool(CanAttack, _canAttack);
+    }
+
+    public void ResetValues()
+    {
+        _isDead = false;
+        SetAttackPermission(true);
     }
 
     public void SetAttackPermission(bool canAttack)
