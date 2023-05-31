@@ -41,7 +41,7 @@ public class BasicAnimatorController
         if (_isDead) return;
         
         bool prevRunningState = _isRunning;
-        _isRunning = data.Speed > 0.05f;
+        _isRunning = data.IsRunning;
         
         if (prevRunningState != _isRunning)
         {

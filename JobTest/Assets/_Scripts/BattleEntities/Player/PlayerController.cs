@@ -18,6 +18,7 @@ public class PlayerController : MeleeBattleEntity
 
     private Rigidbody _rigidBody;
     private Camera _camera;
+    private CameraController _cameraController;
 
     private Vector3 _currentMovementDirection;
     private float _horizontalMouseMovement;
@@ -49,9 +50,11 @@ public class PlayerController : MeleeBattleEntity
 
         if (!_successfullyInitialized) return;
         
-        if (_camera.TryGetComponent(out MouseAimCamera aimCamera))
+        if (_camera.TryGetComponent(out CameraController cameraController))
         {
-            aimCamera.SetTarget(_cameraFocusTransform);
+            _cameraController = cameraController;
+            _cameraController.SetTarget(_cameraFocusTransform);
+            _cameraController.enabled = true;
         }
     }
 
@@ -60,6 +63,7 @@ public class PlayerController : MeleeBattleEntity
         base.ResetValues();
         _isDead = false;
         _animatorController.ResetValues();
+        _cameraController.enabled = true;
     }
 
     public void SetPlayerCamera(Camera cam)
@@ -132,6 +136,8 @@ public class PlayerController : MeleeBattleEntity
         base.Die();
         _isDead = true;
         _rigidBody.velocity = Vector3.zero;
+        _cameraController.enabled = false;
+        GameStateController.Instance.GameState = eGameState.GameOver;
     }
 
     protected override void HandleAnimation()
@@ -143,7 +149,7 @@ public class PlayerController : MeleeBattleEntity
 
         Helpers.AnimatorUpdateData animatorUpdateData = new Helpers.AnimatorUpdateData
         {
-            Speed = _currentMovementDirection.magnitude,
+            IsRunning = _currentMovementDirection.magnitude > 0.05f,
             ReceivedHit = rh,
             InitiatedAttack = _initiatedAttack,
             Died = _isDead

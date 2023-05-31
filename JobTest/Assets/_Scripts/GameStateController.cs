@@ -31,10 +31,3 @@ public class GameStateController
         _gameState = eGameState.MainMenu;
     }
 }
-
-public enum eGameState
-{
-    MainMenu,
-    Fighting,
-    GameOverScreen
-}

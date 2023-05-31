@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CompositionRoot : MonoBehaviour
 {
+    [SerializeField] private MainCanvas _mainCanvas;
     [SerializeField] private CameraManager _cameraManager;
     [SerializeField] private Transform _playerSpawnPoint;
     [SerializeField] private BattleEntitiesConfig _battleEntitiesConfig;
@@ -18,35 +19,40 @@ public class CompositionRoot : MonoBehaviour
             Debug.LogError("Player spawn point wasn't assigned");
         }
 
+        GameStateController.Instance.GameState = eGameState.MainMenu;
+        
         GameStateController.Instance.OnGameStateChanged += OnGameStateChanged;
+        
+        _mainCanvas.Initialize();
+        _mainCanvas.OnOpenMainMenu += OnOpenMainMenu;
+        _mainCanvas.OnStartFighting += OnStartFighting;
+        
+        _cameraManager.Initialize(_mainCanvas);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            GameStateController.Instance.GameState = eGameState.Fighting;
-
-        }
         if (Input.GetKeyDown(KeyCode.P))
         {
             GameStateController.Instance.GameState = eGameState.MainMenu;
         }
     }
     
-    private void OnGameStateChanged(eGameState state)
-    {
-        switch (state)
-        {
-            case eGameState.MainMenu:
-                OnOpenMainMenu();
-                break;
-            case eGameState.Fighting:
-                OnStartFighting();
-                break;
-        }
-    }
-    
+    // private void OnGameStateChanged(eGameState state)
+    // {
+    //     switch (state)
+    //     {
+    //         case eGameState.MainMenu:
+    //             // OnOpenMainMenu();
+    //             break;
+    //         case eGameState.Fighting:
+    //             // OnStartFighting();
+    //             break;
+    //         case eGameState.GameOver:
+    //             break;
+    //     }
+    // }
+    //
     private void OnOpenMainMenu()
     {
         _playerController.gameObject.SetActive(false);
@@ -76,5 +82,7 @@ public class CompositionRoot : MonoBehaviour
     private void OnDestroy()
     {
         GameStateController.Instance.OnGameStateChanged -= OnGameStateChanged;
+        _mainCanvas.OnOpenMainMenu -= OnOpenMainMenu;
+        _mainCanvas.OnStartFighting -= OnStartFighting;
     }
 }
