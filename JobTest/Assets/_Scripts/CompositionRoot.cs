@@ -21,7 +21,7 @@ public class CompositionRoot : MonoBehaviour
 
         GameStateController.Instance.GameState = eGameState.MainMenu;
         
-        GameStateController.Instance.OnGameStateChanged += OnGameStateChanged;
+        // GameStateController.Instance.OnGameStateChanged += OnGameStateChanged;
         
         _mainCanvas.Initialize();
         _mainCanvas.OnOpenMainMenu += OnOpenMainMenu;
