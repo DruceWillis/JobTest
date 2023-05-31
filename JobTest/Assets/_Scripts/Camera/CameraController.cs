@@ -13,10 +13,7 @@ public class CameraController : MonoBehaviour
     public void SetTarget(Transform target)
     {
         _cachedTransform = transform;
-        
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
-        
+
         _target = target;
         _offset = target.position - _offsetCorrection;
         _cachedTransform.position = _offset;

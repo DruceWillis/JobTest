@@ -26,8 +26,7 @@ public class PlayerController : MeleeBattleEntity
     private bool _isDead;
 
     private bool _successfullyInitialized;
-
-
+    
     public override void Initialize(BattleEntityData data)
     {
         base.Initialize(data);
@@ -64,6 +63,10 @@ public class PlayerController : MeleeBattleEntity
         _isDead = false;
         _animatorController.ResetValues();
         _cameraController.enabled = true;
+        
+        if (!gameObject.activeSelf) return;
+        _animator.Rebind();
+        _animator.Update(0f);
     }
 
     public void SetPlayerCamera(Camera cam)
@@ -145,7 +148,7 @@ public class PlayerController : MeleeBattleEntity
         // FOR DEBUGGING PURPOSES
         bool rh = Input.GetKeyDown(KeyCode.H);
         if (rh)
-            ReceiveDamage(10);
+            ReceiveDamage(2);
 
         Helpers.AnimatorUpdateData animatorUpdateData = new Helpers.AnimatorUpdateData
         {

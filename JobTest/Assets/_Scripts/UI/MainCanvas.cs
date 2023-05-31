@@ -15,6 +15,8 @@ public class MainCanvas : MonoBehaviour
     
     private UIScreen _currentScreen;
 
+    public FightingScreen FightingScreen => _screens.First(s => s.ScreenType == eScreenType.Fighting) as FightingScreen;
+
     public void Initialize()
     {
         GameStateController.Instance.OnGameStateChanged += OnGameStateChanged;
@@ -39,6 +41,12 @@ public class MainCanvas : MonoBehaviour
         });
     }
 
+    private void EnableCursor(bool enable)
+    {
+        Cursor.visible = enable;
+        Cursor.lockState = enable ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
     private void FadeInOut(Action action)
     {
         _currentScreen.Hide();
@@ -55,12 +63,15 @@ public class MainCanvas : MonoBehaviour
         switch (state)
         {
             case eGameState.MainMenu:
+                EnableCursor(true);
                 FadeInOut(OnOpenMainMenu);
                 break;
             case eGameState.Fighting:
+                EnableCursor(false);
                 FadeInOut(OnStartFighting);
                 break;
             case eGameState.GameOver:
+                EnableCursor(true);
                 SelectScreen(Helpers.GetAppropriateScreenTypeByGameState());
                 break;
         }

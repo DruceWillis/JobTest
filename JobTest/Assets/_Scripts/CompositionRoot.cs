@@ -37,28 +37,12 @@ public class CompositionRoot : MonoBehaviour
             GameStateController.Instance.GameState = eGameState.MainMenu;
         }
     }
-    
-    // private void OnGameStateChanged(eGameState state)
-    // {
-    //     switch (state)
-    //     {
-    //         case eGameState.MainMenu:
-    //             // OnOpenMainMenu();
-    //             break;
-    //         case eGameState.Fighting:
-    //             // OnStartFighting();
-    //             break;
-    //         case eGameState.GameOver:
-    //             break;
-    //     }
-    // }
-    //
+
     private void OnOpenMainMenu()
     {
         _playerController.gameObject.SetActive(false);
     }
-    
-        
+
     private void OnStartFighting()
     {
         if (_initializedPlayer)
@@ -75,13 +59,13 @@ public class CompositionRoot : MonoBehaviour
                 .GetComponent<PlayerController>();
             _playerController.SetPlayerCamera(_cameraManager.Camera);
             _playerController.Initialize(vikingBattleEntity.Data);
+            _playerController.OnHealthPercentChanged += _mainCanvas.FightingScreen.UpdateHealthBar;
             _initializedPlayer = true;
         }
     }
 
     private void OnDestroy()
     {
-        GameStateController.Instance.OnGameStateChanged -= OnGameStateChanged;
         _mainCanvas.OnOpenMainMenu -= OnOpenMainMenu;
         _mainCanvas.OnStartFighting -= OnStartFighting;
     }
