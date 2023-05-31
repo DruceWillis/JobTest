@@ -11,7 +11,9 @@ public abstract class BaseBattleEntity : MonoBehaviour
     protected int _maxHealth;
     protected int _health;
     protected int _baseDamage;
-
+    protected bool _isDead;
+    protected bool _successfullyInitialized;
+    
     public Action<float, float> OnHealthPercentChanged;
     public eBattleEntityType EntityType => _entityType;
 
@@ -28,6 +30,7 @@ public abstract class BaseBattleEntity : MonoBehaviour
     {
         _health = _maxHealth;
         OnHealthPercentChanged?.Invoke((float)_health / _maxHealth, 0f);
+        _isDead = false;
     }
     
     public virtual void ReceiveDamage(int damage)
@@ -43,11 +46,11 @@ public abstract class BaseBattleEntity : MonoBehaviour
             return;
         }
     }
-    
-    protected virtual void Move() {}
-    protected virtual void Rotate() {}
-    protected virtual void Attack() {}
-    protected virtual void HandleAnimation() {}
+
+    protected abstract void Move();
+    protected abstract void Rotate();
+    protected abstract void Attack();
+    protected abstract void HandleAnimation();
 
     protected virtual void Die()
     {

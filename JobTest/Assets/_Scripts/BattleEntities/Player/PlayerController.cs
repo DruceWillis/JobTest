@@ -23,9 +23,7 @@ public class PlayerController : MeleeBattleEntity
     private Vector3 _currentMovementDirection;
     private float _horizontalMouseMovement;
     private bool _initiatedAttack;
-    private bool _isDead;
 
-    private bool _successfullyInitialized;
     
     public override void Initialize(BattleEntityData data)
     {
@@ -40,7 +38,7 @@ public class PlayerController : MeleeBattleEntity
         
         _rigidBody = GetComponent<Rigidbody>();
 
-        InitializeWeaponControllers(() =>
+        InitializeWeaponControllers(_data.Weapon, () =>
         {
             _animationFunctionEventHandler.Initialize(_animatorController, ref _weaponColliders);
         });
@@ -60,7 +58,6 @@ public class PlayerController : MeleeBattleEntity
     public override void ResetValues()
     {
         base.ResetValues();
-        _isDead = false;
         _animatorController.ResetValues();
         _cameraController.enabled = true;
         
@@ -82,7 +79,6 @@ public class PlayerController : MeleeBattleEntity
         Move();
         Rotate();
         HandleAnimation();
-        ResetNecessaryInput();
     }
 
     private void HandleInput()
@@ -99,11 +95,6 @@ public class PlayerController : MeleeBattleEntity
         {
             Attack();
         }
-    }
-    
-    private void ResetNecessaryInput()
-    {
-        _initiatedAttack = false;
     }
 
     protected override void Move()
@@ -158,6 +149,8 @@ public class PlayerController : MeleeBattleEntity
             Died = _isDead
         };
         _animatorController.Update(animatorUpdateData);
+
+        _initiatedAttack = false;
     }
     
     protected override bool HasNullReferences()

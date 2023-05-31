@@ -10,11 +10,12 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private Image _blackOverlay;
     [SerializeField] private List<UIScreen> _screens;
 
+
+    private UIScreen _currentScreen;
+
     public Action OnOpenMainMenu;
     public Action OnStartFighting;
     
-    private UIScreen _currentScreen;
-
     public FightingScreen FightingScreen => _screens.First(s => s.ScreenType == eScreenType.Fighting) as FightingScreen;
 
     public void Initialize()

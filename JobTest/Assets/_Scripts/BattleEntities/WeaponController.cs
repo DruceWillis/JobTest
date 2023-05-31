@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
@@ -23,11 +22,13 @@ public class WeaponController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.LogError(other.gameObject.name);
         if (!other.gameObject.TryGetComponent(out BaseBattleEntity battleEntity)) return;
 
         if (_data.CanDamageEntityByType(battleEntity.EntityType))
         {
             battleEntity.ReceiveDamage(_data.Damage);
         }
+        
     }
 }
