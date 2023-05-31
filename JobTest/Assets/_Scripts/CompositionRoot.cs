@@ -14,14 +14,9 @@ public class CompositionRoot : MonoBehaviour
     
     private void Awake()
     {
-        if (_playerSpawnPoint == null)
-        {
-            Debug.LogError("Player spawn point wasn't assigned");
-        }
+        if (HasNullReferences()) return;
 
         GameStateController.Instance.GameState = eGameState.MainMenu;
-        
-        // GameStateController.Instance.OnGameStateChanged += OnGameStateChanged;
         
         _mainCanvas.Initialize();
         _mainCanvas.OnOpenMainMenu += OnOpenMainMenu;
@@ -44,6 +39,11 @@ public class CompositionRoot : MonoBehaviour
     }
 
     private void OnStartFighting()
+    {
+        HandlePlayerOnStartFighting();
+    }
+
+    private void HandlePlayerOnStartFighting()
     {
         if (_initializedPlayer)
         {
@@ -68,5 +68,34 @@ public class CompositionRoot : MonoBehaviour
     {
         _mainCanvas.OnOpenMainMenu -= OnOpenMainMenu;
         _mainCanvas.OnStartFighting -= OnStartFighting;
+    }
+    
+    private bool HasNullReferences()
+    {
+        if (_playerSpawnPoint == null)
+        {
+            Debug.LogError("PlayerSpawnPoint wasn't assigned");
+            return true;
+        }
+        
+        if (_mainCanvas == null)
+        {
+            Debug.LogError("MainCanvas wasn't assigned");
+            return true;
+        }
+        
+        if (_cameraManager == null)
+        {
+            Debug.LogError("CameraManager wasn't assigned");
+            return true;
+        }
+
+        if (_battleEntitiesConfig == null)
+        {
+            Debug.LogError("BattleEntitiesConfig wasn't assigned");
+            return true;
+        }
+        
+        return false;
     }
 }

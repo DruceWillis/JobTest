@@ -24,6 +24,8 @@ public class PlayerController : MeleeBattleEntity
     private float _horizontalMouseMovement;
     private bool _initiatedAttack;
 
+    // remove later
+    private bool RECEIVEDHIT;
     
     public override void Initialize(BattleEntityData data)
     {
@@ -32,13 +34,13 @@ public class PlayerController : MeleeBattleEntity
         _playerInputActions = new PlayerInputActions();
         _playerInputActions.Player.Enable();
 
-        _animatorController = new BasicAnimatorController(_animator);
+        _animatorController = new BasicAnimatorController(_animator, true);
 
         _animationFunctionEventHandler = _vikingModelTransform.GetComponent<AnimationFunctionEventHandler>();
         
         _rigidBody = GetComponent<Rigidbody>();
 
-        InitializeWeaponControllers(_data.Weapon, () =>
+        InitializeWeaponControllers(_data.Weapon, _baseDamage, () =>
         {
             _animationFunctionEventHandler.Initialize(_animatorController, ref _weaponColliders);
         });
@@ -73,6 +75,10 @@ public class PlayerController : MeleeBattleEntity
 
     private void Update()
     {
+        RECEIVEDHIT = Input.GetKeyDown(KeyCode.H);
+        if (RECEIVEDHIT)
+            ReceiveDamage(2);
+        
         if (!_successfullyInitialized || _isDead) return;
 
         HandleInput();
@@ -128,7 +134,6 @@ public class PlayerController : MeleeBattleEntity
     protected override void Die()
     {
         base.Die();
-        _isDead = true;
         _rigidBody.velocity = Vector3.zero;
         _cameraController.enabled = false;
         GameStateController.Instance.GameState = eGameState.GameOver;
@@ -136,15 +141,10 @@ public class PlayerController : MeleeBattleEntity
 
     protected override void HandleAnimation()
     {
-        // FOR DEBUGGING PURPOSES
-        bool rh = Input.GetKeyDown(KeyCode.H);
-        if (rh)
-            ReceiveDamage(2);
-
         Helpers.AnimatorUpdateData animatorUpdateData = new Helpers.AnimatorUpdateData
         {
             IsRunning = _currentMovementDirection.magnitude > 0.05f,
-            ReceivedHit = rh,
+            ReceivedHit = RECEIVEDHIT,
             InitiatedAttack = _initiatedAttack,
             Died = _isDead
         };

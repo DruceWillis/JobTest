@@ -17,12 +17,12 @@ public class AnimationFunctionEventHandler : MonoBehaviour
         _animatorController.SetAttackPermission(true);
     }
 
-    public void EnableAxeCollider()
+    public void EnableWeaponColliders()
     {
         _weaponColliders.ForEach(wc => wc.enabled = true);
     }
     
-    public void DisableAxeCollider()
+    public void DisableWeaponColliders()
     {
         _weaponColliders.ForEach(wc => wc.enabled = false);
     }

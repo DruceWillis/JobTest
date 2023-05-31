@@ -4,15 +4,14 @@ using UnityEngine;
 public abstract class BaseBattleEntity : MonoBehaviour
 {
     protected BattleEntityData _data;
- 
-    protected Action OnDie;
-    
+
     protected eBattleEntityType _entityType;
     protected int _maxHealth;
     protected int _health;
     protected int _baseDamage;
     protected bool _isDead;
     protected bool _successfullyInitialized;
+    protected bool _receivedDamage;
     
     public Action<float, float> OnHealthPercentChanged;
     public eBattleEntityType EntityType => _entityType;
@@ -35,6 +34,9 @@ public abstract class BaseBattleEntity : MonoBehaviour
     
     public virtual void ReceiveDamage(int damage)
     {
+        if (_isDead) return;
+        
+        Debug.LogError(damage);
         _health -= damage;
         _health = _health < 0 ? 0 : _health;
         
@@ -45,6 +47,18 @@ public abstract class BaseBattleEntity : MonoBehaviour
             Die();
             return;
         }
+
+        _receivedDamage = true;
+        // OnReceivedDamage?.Invoke();
+    }
+    
+    public virtual void ReceiveHeal(int healAmount)
+    {
+        if (_isDead) return;
+        
+        _health = _health + healAmount > _maxHealth ? _maxHealth : _health + healAmount;
+        
+        OnHealthPercentChanged?.Invoke((float)_health / _maxHealth, 0.25f);
     }
 
     protected abstract void Move();
@@ -54,7 +68,8 @@ public abstract class BaseBattleEntity : MonoBehaviour
 
     protected virtual void Die()
     {
-        OnDie?.Invoke();
+        _isDead = true;
+        HandleAnimation();
     }
 
     protected abstract bool HasNullReferences();

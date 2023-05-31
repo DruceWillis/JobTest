@@ -109,7 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 456116270818557099}
   _movementSpeed: 5
-  _rotationSpeed: 50
+  _rotationSpeed: 30
   _rotationTowardsDirectionSpeed: 40
   _vikingModelTransform: {fileID: 5815378024066426577}
   _cameraFocusTransform: {fileID: 1961241208}
