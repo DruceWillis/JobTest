@@ -59,10 +59,6 @@ public class PlayerController : MeleeBattleEntity
 
     private void Update()
     {
-        RECEIVEDHIT = Input.GetKeyDown(KeyCode.H);
-        if (RECEIVEDHIT)
-            ReceiveDamage(2);
-        
         if (!_successfullyInitialized || _isDead) return;
 
         HandleInput();

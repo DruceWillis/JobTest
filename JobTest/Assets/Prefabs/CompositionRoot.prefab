@@ -43,3 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af7a197cae25ae84bbe07777e8a77949, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _battleEntitiesConfig: {fileID: 0}
+  _mainCanvas: {fileID: 0}
+  _cameraManager: {fileID: 0}
+  _playerSpawnPoint: {fileID: 0}
+  _monstersSpawnPositions: []
+  _minRespawnRadius: 50
+  _maxRespawnRadius: 60

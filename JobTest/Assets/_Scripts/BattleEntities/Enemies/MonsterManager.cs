@@ -80,6 +80,7 @@ public class MonsterManager
             Debug.LogError("Something went wrong with raycast for new spawn position");
         }
         
+        // Debug.LogError(Vector3.Distance(hit.point, _target.position));
         return hit.point;
     }
 }
