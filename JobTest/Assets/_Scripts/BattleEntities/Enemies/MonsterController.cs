@@ -30,6 +30,8 @@ public class MonsterController : MeleeBattleEntity
     private bool _isTargetInFieldOfView;
     private bool _canChase = true;
 
+    public Action OnFinishedDieAnimation;
+    
     public MonsterState CurrentState
     {
         get => _currentState;
@@ -57,7 +59,7 @@ public class MonsterController : MeleeBattleEntity
         _animatorController = new BasicAnimatorController(_animator, false);
 
         _animationFunctionEventHandler = _monsterModelTransform.GetComponent<AnimationFunctionEventHandler>();
-        _animationFunctionEventHandler.OnDie = () => gameObject.SetActive(false);
+        _animationFunctionEventHandler.OnDie = () => OnFinishedDieAnimation?.Invoke();
         _animationFunctionEventHandler.OnFinishedInPlaceAnimation = () => _canChase = true;
 
         _collider = GetComponent<Collider>();
@@ -81,6 +83,7 @@ public class MonsterController : MeleeBattleEntity
     public override void ResetValues()
     {
         base.ResetValues();
+
         _animatorController.ResetValues();
         _collider.enabled = true;
 
@@ -102,6 +105,7 @@ public class MonsterController : MeleeBattleEntity
         else
         {
             _acquiredTarget = false;
+            _canChase = false;
             CurrentState = _idleState;
         }
     }

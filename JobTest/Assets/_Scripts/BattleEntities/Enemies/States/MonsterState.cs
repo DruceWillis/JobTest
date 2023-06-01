@@ -19,7 +19,7 @@ public abstract class MonsterState
     
     public virtual void ExecuteState()
     {
-        Debug.LogError(GetType().Name);
+        // Debug.LogError(GetType().Name);
         _onExecute?.Invoke();
     }
 }   
