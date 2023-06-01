@@ -8,11 +8,11 @@ public class MonsterController : MeleeBattleEntity
     [SerializeField] private Animator _animator;
     [SerializeField] private Transform _monsterModelTransform;
     [SerializeField] private MonsterHealthBarController _healthBarController;
+    [SerializeField] private Collider _collider;
 
     private BasicAnimatorController _animatorController;
     private AnimationFunctionEventHandler _animationFunctionEventHandler;
 
-    private Collider _collider;
     private NavMeshAgent _navMeshAgent;
     private Transform _target;
 
@@ -52,7 +52,6 @@ public class MonsterController : MeleeBattleEntity
         _animationFunctionEventHandler.OnDie = () => OnFinishedDieAnimation?.Invoke();
         _animationFunctionEventHandler.OnFinishedInPlaceAnimation = () => _canChase = true;
 
-        _collider = GetComponent<Collider>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
 
         InitializeWeaponControllers(_data.Weapon, _baseDamage, () =>
