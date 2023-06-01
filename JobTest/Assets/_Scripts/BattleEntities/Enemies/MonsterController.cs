@@ -15,6 +15,7 @@ public class MonsterController : MeleeBattleEntity
 
     private NavMeshAgent _navMeshAgent;
     private Transform _target;
+    private Camera _camera;
 
     private MonsterState _currentState;
     private MonsterIdleState _idleState;
@@ -40,8 +41,7 @@ public class MonsterController : MeleeBattleEntity
             _currentState.OnEnteredState();
         }
     }
-
-
+    
     public override void Initialize(BattleEntityData data)
     {
         base.Initialize(data);
@@ -76,7 +76,8 @@ public class MonsterController : MeleeBattleEntity
         if (!_successfullyInitialized || _isDead) return;
         
         CurrentState.ExecuteState();
-        
+
+        _healthBarController.LookAtPlayerCamera(_camera.transform.position);
         HandleAnimation();
     }
 
@@ -231,6 +232,10 @@ public class MonsterController : MeleeBattleEntity
             (_target.position - _monsterModelTransform.transform.position).normalized) > 0.02f;
     }
 
+    public void AssignCamera(Camera cam)
+    {
+        _camera = cam;
+    }
 
     protected override bool HasNullReferences()
     {

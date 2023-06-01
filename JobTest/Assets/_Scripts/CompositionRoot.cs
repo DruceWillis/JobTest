@@ -32,7 +32,7 @@ public class CompositionRoot : MonoBehaviour
 
         _monstersManager = new MonsterManager(_monstersSpawnPositions,
             _battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Monster),
-            orbSpawnPos =>
+            _cameraManager.Camera, orbSpawnPos =>
             {
                 _scoreController.KilledMonster();
                 _healthOrbSpawner.SpawnHealthOrb(orbSpawnPos);

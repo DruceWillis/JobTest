@@ -2,7 +2,6 @@
 
 public class CameraController : MonoBehaviour
 {
-
     [SerializeField] private Transform _target;
 
     private Transform _cachedTransform;
