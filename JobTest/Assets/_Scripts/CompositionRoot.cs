@@ -74,6 +74,7 @@ public class CompositionRoot : MonoBehaviour
             _playerController.SetPlayerCamera(_cameraManager.Camera);
             _playerController.Initialize(vikingBattleEntity.Data);
             _playerController.OnHealthPercentChanged += _mainCanvas.FightingScreen.UpdateHealthBar;
+            _playerController.OnDie += () => _monstersManager.SetTarget(null);
             _initializedPlayer = true;
         }
     }

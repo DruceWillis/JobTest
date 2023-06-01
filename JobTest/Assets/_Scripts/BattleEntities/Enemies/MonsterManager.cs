@@ -30,7 +30,7 @@ public class MonsterManager
 
     public void Restart()
     {
-        _monsters.ForEach(m => ResetMonster(m, true));
+        _monsters.ForEach(m => ResetMonster(m, false));
     }
 
     public void SetTarget(Transform target)
@@ -42,15 +42,16 @@ public class MonsterManager
         });
     }
 
-    private void ResetMonster(MonsterController monster, bool useOriginalSpawnPosition)
+    private void ResetMonster(MonsterController monster, bool revivingDuringFight)
     {
-        var newPosition = useOriginalSpawnPosition
+        var newPosition = revivingDuringFight
             ? _monsterSpawnPointDictionary[monster].position
-            : GetRandomPositionInPlayerRadius();
+            : _monsterSpawnPointDictionary[monster].position;
         
         monster.AssignTarget(null);
         monster.gameObject.SetActive(false);
         monster.transform.SetPositionAndRotation(newPosition, Quaternion.identity);
+        (revivingDuringFight ? (Action)monster.IncreaseMaxHealth : monster.ResetMaxHealth)();
         monster.ResetValues();
         monster.gameObject.SetActive(true);
         monster.AssignTarget(_target);

@@ -57,6 +57,20 @@ public class PlayerController : MeleeBattleEntity
         }
     }
 
+    private void Update()
+    {
+        RECEIVEDHIT = Input.GetKeyDown(KeyCode.H);
+        if (RECEIVEDHIT)
+            ReceiveDamage(2);
+        
+        if (!_successfullyInitialized || _isDead) return;
+
+        HandleInput();
+        Move();
+        Rotate();
+        HandleAnimation();
+    }
+    
     public override void ResetValues()
     {
         base.ResetValues();
@@ -71,20 +85,6 @@ public class PlayerController : MeleeBattleEntity
     public void SetPlayerCamera(Camera cam)
     {
         _camera = cam;
-    }
-
-    private void Update()
-    {
-        RECEIVEDHIT = Input.GetKeyDown(KeyCode.H);
-        if (RECEIVEDHIT)
-            ReceiveDamage(2);
-        
-        if (!_successfullyInitialized || _isDead) return;
-
-        HandleInput();
-        Move();
-        Rotate();
-        HandleAnimation();
     }
 
     private void HandleInput()

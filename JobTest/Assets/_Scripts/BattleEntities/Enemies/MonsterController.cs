@@ -7,8 +7,7 @@ public class MonsterController : MeleeBattleEntity
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private Transform _monsterModelTransform;
-    // [SerializeField] private float _speed = 4;
-    // [SerializeField] private float _acceleration = 30;
+    [SerializeField] private MonsterHealthBarController _healthBarController;
 
     private BasicAnimatorController _animatorController;
     private AnimationFunctionEventHandler _animationFunctionEventHandler;
@@ -42,15 +41,6 @@ public class MonsterController : MeleeBattleEntity
         }
     }
 
-    
-    private void Update()
-    {
-        if (!_successfullyInitialized || _isDead) return;
-
-        CurrentState.ExecuteState();
-
-        HandleAnimation();
-    }
 
     public override void Initialize(BattleEntityData data)
     {
@@ -75,11 +65,22 @@ public class MonsterController : MeleeBattleEntity
         _fightingState = new MonsterFightingState(FightingStateLogic, OnEnteredFightingState);
         CurrentState = _idleState;
         
+        OnHealthPercentChanged += _healthBarController.UpdateHealthBar;
+
         _successfullyInitialized = !HasNullReferences();
 
         if (!_successfullyInitialized) return;
     }
-    
+        
+    private void Update()
+    {
+        if (!_successfullyInitialized || _isDead) return;
+        
+        CurrentState.ExecuteState();
+        
+        HandleAnimation();
+    }
+
     public override void ResetValues()
     {
         base.ResetValues();
@@ -91,6 +92,15 @@ public class MonsterController : MeleeBattleEntity
         _navMeshAgent.isStopped = false;
         _animator.Rebind();
         _animator.Update(0f);
+    }
+
+    public void IncreaseMaxHealth()
+    {
+        _maxHealth++;
+    }
+    public void ResetMaxHealth()
+    {
+        _maxHealth = _data.Health;
     }
 
     public void AssignTarget(Transform target)
@@ -231,18 +241,18 @@ public class MonsterController : MeleeBattleEntity
             return true;
         }
         
-        // if (_animationFunctionEventHandler == null)
-        // {
-        //     Debug.LogError("Didn't find animation function event handler");
-        //     return true;
-        // }
-        //
-        // if (_weaponColliders.Count <= 0)
-        // {
-        //     Debug.LogError("Didn't find weapon colliders");
-        //     return true;
-        // }
-        //
+        if (_animationFunctionEventHandler == null)
+        {
+            Debug.LogError("Didn't find animation function event handler");
+            return true;
+        }
+        
+        if (_weaponColliders.Count <= 0)
+        {
+            Debug.LogError("Didn't find weapon colliders");
+            return true;
+        }
+        
         return false;
     }
 }
