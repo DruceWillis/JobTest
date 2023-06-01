@@ -10,19 +10,25 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private Image _blackOverlay;
     [SerializeField] private List<UIScreen> _screens;
 
-
     private UIScreen _currentScreen;
+    private ScoreController _scoreController;
 
     public Action OnOpenMainMenu;
     public Action OnStartFighting;
     
     public FightingScreen FightingScreen => _screens.First(s => s.ScreenType == eScreenType.Fighting) as FightingScreen;
 
-    public void Initialize()
+    public void Initialize(ScoreController scoreController)
     {
         GameStateController.Instance.OnGameStateChanged += OnGameStateChanged;
         _screens.ForEach(s => (s.ScreenType == eScreenType.MainMenu ? (Action)s.Show : s.Hide)());
         _currentScreen = _screens.First(s => s.ScreenType == eScreenType.MainMenu);
+        _scoreController = scoreController;
+        var fightingScreen = _screens.First(s => s.ScreenType == eScreenType.Fighting) as FightingScreen;
+        if (fightingScreen != null)
+        {
+            _scoreController.OnScoreChanged += fightingScreen.UpdateScore;
+        }
     }
 
     public void SelectScreen(eScreenType screenType)
@@ -74,6 +80,7 @@ public class MainCanvas : MonoBehaviour
             case eGameState.GameOver:
                 EnableCursor(true);
                 SelectScreen(Helpers.GetAppropriateScreenTypeByGameState());
+                (_currentScreen as GameOverScreen).SetFinalScore(_scoreController.CurrentScore);
                 break;
         }
     }

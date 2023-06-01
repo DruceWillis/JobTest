@@ -3,6 +3,8 @@ using UnityEngine;
 
 public abstract class BaseBattleEntity : MonoBehaviour
 {
+    public Action OnDie;
+    
     protected BattleEntityData _data;
 
     protected eBattleEntityType _entityType;
@@ -66,6 +68,7 @@ public abstract class BaseBattleEntity : MonoBehaviour
 
     protected virtual void Die()
     {
+        OnDie?.Invoke();
         _isDead = true;
         HandleAnimation();
     }

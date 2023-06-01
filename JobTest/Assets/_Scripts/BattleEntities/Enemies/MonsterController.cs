@@ -83,9 +83,9 @@ public class MonsterController : MeleeBattleEntity
         base.ResetValues();
         _animatorController.ResetValues();
         _collider.enabled = true;
-        _navMeshAgent.isStopped = false;
 
         if (!gameObject.activeSelf) return;
+        _navMeshAgent.isStopped = false;
         _animator.Rebind();
         _animator.Update(0f);
     }
@@ -93,8 +93,16 @@ public class MonsterController : MeleeBattleEntity
     public void AssignTarget(Transform target)
     {
         _target = target;
-        _acquiredTarget = true;
-        CurrentState = _chaseState;
+        if (_target != null)
+        {
+            _acquiredTarget = true;
+            CurrentState = _chaseState;
+        }
+        else
+        {
+            ResetValues();
+            CurrentState = _idleState;
+        }
     }
 
 
@@ -103,7 +111,6 @@ public class MonsterController : MeleeBattleEntity
         _isTargetInFieldOfView = Vector3.Dot(_monsterModelTransform.transform.forward,
             (_target.position - _monsterModelTransform.transform.position).normalized) > 0.2f;
 
-        Debug.LogError(_isTargetInFieldOfView);
         _navMeshAgent.isStopped = !_isTargetInFieldOfView;
         _navMeshAgent.SetDestination(_target.position);
         

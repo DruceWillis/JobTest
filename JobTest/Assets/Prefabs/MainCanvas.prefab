@@ -2133,6 +2133,7 @@ MonoBehaviour:
   _slideFromPosition: {fileID: 6398165628131677132}
   _restartButton: {fileID: 252194838}
   _exitButton: {fileID: 265976728}
+  _scoreText: {fileID: 4494781640243125706}
 --- !u!1 &8348124781232371057
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class GameOverScreen : UIScreen
     
     [SerializeField] private Button _restartButton;
     [SerializeField] private Button _exitButton;
+
+    [SerializeField] private TMP_Text _scoreText;
 
     public void Awake()
     {
@@ -27,6 +30,11 @@ public class GameOverScreen : UIScreen
         
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void SetFinalScore(int score)
+    {
+        _scoreText.text = score.ToString();
     }
 
     private void Start()

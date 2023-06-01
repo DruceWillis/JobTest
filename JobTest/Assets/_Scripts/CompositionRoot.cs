@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CompositionRoot : MonoBehaviour
 {
@@ -8,10 +10,10 @@ public class CompositionRoot : MonoBehaviour
     [SerializeField] private Transform _playerSpawnPoint;
     [SerializeField] private BattleEntitiesConfig _battleEntitiesConfig;
     
-    // remove later
-    public MonsterController DEBUGMONSTER;
+    public List<MonsterController> _monsters;
 
     private PlayerController _playerController;
+    private ScoreController _scoreController;
 
     private bool _initializedPlayer;
     
@@ -20,14 +22,19 @@ public class CompositionRoot : MonoBehaviour
         if (HasNullReferences()) return;
 
         GameStateController.Instance.GameState = eGameState.MainMenu;
+        _scoreController = new ScoreController();
         
-        _mainCanvas.Initialize();
+        _mainCanvas.Initialize(_scoreController);
         _mainCanvas.OnOpenMainMenu += OnOpenMainMenu;
         _mainCanvas.OnStartFighting += OnStartFighting;
         
         _cameraManager.Initialize(_mainCanvas);
         
-        DEBUGMONSTER.Initialize(_battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Monster).Data);
+        _monsters.ForEach(m =>
+        {
+            m.Initialize(_battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Monster).Data);
+            m.OnDie += _scoreController.KilledMonster;
+        });
     }
 
     private void Update()
@@ -38,15 +45,24 @@ public class CompositionRoot : MonoBehaviour
         }
     }
 
+    private void MonstersSetTarget(Transform target)
+    {
+        _monsters.ForEach(m =>
+        {
+            m.AssignTarget(target);
+        });
+    }
+
     private void OnOpenMainMenu()
     {
         _playerController.gameObject.SetActive(false);
+        MonstersSetTarget(null);
     }
 
     private void OnStartFighting()
     {
         HandlePlayerOnStartFighting();
-        DEBUGMONSTER.AssignTarget(_playerController.transform);
+        MonstersSetTarget(_playerController.transform);
     }
 
     private void HandlePlayerOnStartFighting()

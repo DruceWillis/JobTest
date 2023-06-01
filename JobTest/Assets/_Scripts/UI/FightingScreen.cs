@@ -14,4 +14,9 @@ public class FightingScreen : UIScreen
             x => _healthBarImage.fillAmount = x, 
             healthPercent, duration);
     }
+    
+    public void UpdateScore(int newScore)
+    {
+        _scoreText.text = newScore.ToString();
+    }
 }
