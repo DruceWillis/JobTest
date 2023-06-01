@@ -96,11 +96,12 @@ public class MonsterController : MeleeBattleEntity
         if (_target != null)
         {
             _acquiredTarget = true;
+            _canChase = true;
             CurrentState = _chaseState;
         }
         else
         {
-            ResetValues();
+            _acquiredTarget = false;
             CurrentState = _idleState;
         }
     }
@@ -163,7 +164,10 @@ public class MonsterController : MeleeBattleEntity
         _receivedDamage = false;
     }
 
-    private void OnEnteredIdleState() { }
+    private void OnEnteredIdleState()
+    {
+        _navMeshAgent.isStopped = true;
+    }
     
     private void IdleStateLogic() { }
 

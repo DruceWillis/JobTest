@@ -1,16 +1,15 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class CompositionRoot : MonoBehaviour
 {
     [SerializeField] private MainCanvas _mainCanvas;
     [SerializeField] private CameraManager _cameraManager;
     [SerializeField] private Transform _playerSpawnPoint;
+    [SerializeField] private List<Transform> _monstersSpawnPositions;
     [SerializeField] private BattleEntitiesConfig _battleEntitiesConfig;
     
-    public List<MonsterController> _monsters;
+    public MonsterManager _monstersManager;
 
     private PlayerController _playerController;
     private ScoreController _scoreController;
@@ -23,18 +22,16 @@ public class CompositionRoot : MonoBehaviour
 
         GameStateController.Instance.GameState = eGameState.MainMenu;
         _scoreController = new ScoreController();
+
+        _monstersManager = new MonsterManager(_monstersSpawnPositions,
+            _battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Monster),
+            _scoreController.KilledMonster);
         
         _mainCanvas.Initialize(_scoreController);
         _mainCanvas.OnOpenMainMenu += OnOpenMainMenu;
         _mainCanvas.OnStartFighting += OnStartFighting;
         
         _cameraManager.Initialize(_mainCanvas);
-        
-        _monsters.ForEach(m =>
-        {
-            m.Initialize(_battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Monster).Data);
-            m.OnDie += _scoreController.KilledMonster;
-        });
     }
 
     private void Update()
@@ -44,25 +41,20 @@ public class CompositionRoot : MonoBehaviour
             GameStateController.Instance.GameState = eGameState.MainMenu;
         }
     }
-
-    private void MonstersSetTarget(Transform target)
-    {
-        _monsters.ForEach(m =>
-        {
-            m.AssignTarget(target);
-        });
-    }
+    
 
     private void OnOpenMainMenu()
     {
         _playerController.gameObject.SetActive(false);
-        MonstersSetTarget(null);
+        _monstersManager.Restart();
+        _monstersManager.SetTarget(null);
     }
 
     private void OnStartFighting()
     {
         HandlePlayerOnStartFighting();
-        MonstersSetTarget(_playerController.transform);
+        _monstersManager.Restart();
+        _monstersManager.SetTarget(_playerController.transform);
     }
 
     private void HandlePlayerOnStartFighting()
