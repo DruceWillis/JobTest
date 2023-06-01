@@ -11,8 +11,12 @@ public class MonsterManager
     private Action _onMonsterDie;
 
     private Transform _target;
+    private float _minRespawnRadius;
+    private float _maxRespawnRadius;
+    private float RadiusStartingPercent => _minRespawnRadius / _maxRespawnRadius;
     
-    public MonsterManager(List<Transform> spawnPositions, BattleEntity battleEntity, Action onMonsterDeath)
+    public MonsterManager(List<Transform> spawnPositions, BattleEntity battleEntity, Action onMonsterDeath,
+        float minRespawnRadius, float maxRespawnRadius)
     {
         _monsters = new List<MonsterController>();
         _monsterSpawnPointDictionary = new Dictionary<MonsterController, Transform>();
@@ -26,6 +30,9 @@ public class MonsterManager
             _monsters.Add(monster.GetComponent<MonsterController>());
             _monsterSpawnPointDictionary.Add(monster, sp);
         });
+        
+        _minRespawnRadius = minRespawnRadius;
+        _maxRespawnRadius = maxRespawnRadius;
     }
 
     public void Restart()
@@ -44,10 +51,12 @@ public class MonsterManager
 
     private void ResetMonster(MonsterController monster, bool revivingDuringFight)
     {
-        var newPosition = revivingDuringFight
-            ? _monsterSpawnPointDictionary[monster].position
-            : _monsterSpawnPointDictionary[monster].position;
+        if (revivingDuringFight && _target == null) return;
         
+        var newPosition = revivingDuringFight
+            ? GetRandomPositionInPlayerRadius()
+            : _monsterSpawnPointDictionary[monster].position;
+   
         monster.AssignTarget(null);
         monster.gameObject.SetActive(false);
         monster.transform.SetPositionAndRotation(newPosition, Quaternion.identity);
@@ -59,6 +68,18 @@ public class MonsterManager
 
     private Vector3 GetRandomPositionInPlayerRadius()
     {
-        return Vector3.one * 2;
+        var randomPosition = new Vector2(_target.position.x, _target.position.z) 
+                             + Random.insideUnitCircle * (_maxRespawnRadius * RadiusStartingPercent);
+
+        var rayStartPosition = new Vector3(randomPosition.x, 1000, randomPosition.y);
+        int rayCastDistance = (int)rayStartPosition.y + 500;
+        
+        RaycastHit hit;
+        if (!Physics.Raycast(rayStartPosition, Vector3.down, out hit, rayCastDistance, 1 << 8))
+        {
+            Debug.LogError("Something went wrong with raycast for new spawn position");
+        }
+        
+        return hit.point;
     }
 }

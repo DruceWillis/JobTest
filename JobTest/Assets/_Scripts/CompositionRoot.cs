@@ -3,11 +3,16 @@ using UnityEngine;
 
 public class CompositionRoot : MonoBehaviour
 {
+    [SerializeField] private BattleEntitiesConfig _battleEntitiesConfig;
     [SerializeField] private MainCanvas _mainCanvas;
     [SerializeField] private CameraManager _cameraManager;
+
     [SerializeField] private Transform _playerSpawnPoint;
+    
+    [Header("Monsters")]
     [SerializeField] private List<Transform> _monstersSpawnPositions;
-    [SerializeField] private BattleEntitiesConfig _battleEntitiesConfig;
+    [SerializeField] private float _minRespawnRadius = 40f;
+    [SerializeField] private float _maxRespawnRadius = 60f;
     
     public MonsterManager _monstersManager;
 
@@ -25,7 +30,7 @@ public class CompositionRoot : MonoBehaviour
 
         _monstersManager = new MonsterManager(_monstersSpawnPositions,
             _battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Monster),
-            _scoreController.KilledMonster);
+            _scoreController.KilledMonster, _minRespawnRadius, _maxRespawnRadius);
         
         _mainCanvas.Initialize(_scoreController);
         _mainCanvas.OnOpenMainMenu += OnOpenMainMenu;
