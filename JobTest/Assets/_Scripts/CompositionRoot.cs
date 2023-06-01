@@ -26,6 +26,8 @@ public class CompositionRoot : MonoBehaviour
     
     private void Awake()
     {
+        Application.targetFrameRate = 120;
+        
         if (HasNullReferences()) return;
 
         GameStateController.Instance.GameState = eGameState.MainMenu;
