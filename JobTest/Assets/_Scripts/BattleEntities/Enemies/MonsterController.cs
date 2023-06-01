@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-// [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 public class MonsterController : MeleeBattleEntity
 {
     [SerializeField] private Animator _animator;
@@ -52,12 +51,12 @@ public class MonsterController : MeleeBattleEntity
         _animationFunctionEventHandler.OnDie = () => OnFinishedDieAnimation?.Invoke();
         _animationFunctionEventHandler.OnFinishedInPlaceAnimation = () => _canChase = true;
 
-        _navMeshAgent = GetComponent<NavMeshAgent>();
-
         InitializeWeaponControllers(_data.Weapon, _baseDamage, () =>
         {
             _animationFunctionEventHandler.Initialize(_animatorController, ref _weaponColliders);
         });
+        
+        _navMeshAgent = GetComponent<NavMeshAgent>();
         
         _idleState = new MonsterIdleState(IdleStateLogic, OnEnteredIdleState);
         _chaseState = new MonsterChaseState(ChaseStateLogic, OnEnteredChaseState);
@@ -78,6 +77,7 @@ public class MonsterController : MeleeBattleEntity
         CurrentState.ExecuteState();
 
         _healthBarController.LookAtPlayerCamera(_camera.transform.position);
+        
         HandleAnimation();
     }
 
@@ -89,11 +89,20 @@ public class MonsterController : MeleeBattleEntity
         _collider.enabled = true;
 
         if (!gameObject.activeSelf) return;
+        
         _navMeshAgent.isStopped = false;
+        
         _animator.Rebind();
         _animator.Update(0f);
     }
 
+    public override void ReceiveDamage(int damage)
+    {
+        base.ReceiveDamage(damage);
+        
+        _canChase = false;
+    }
+    
     public void IncreaseMaxHealth()
     {
         _maxHealth++;
@@ -106,6 +115,7 @@ public class MonsterController : MeleeBattleEntity
     public void AssignTarget(Transform target)
     {
         _target = target;
+        
         if (_target != null)
         {
             _acquiredTarget = true;
@@ -119,10 +129,16 @@ public class MonsterController : MeleeBattleEntity
             CurrentState = _idleState;
         }
     }
-
+    
+    public void AssignCamera(Camera cam)
+    {
+        _camera = cam;
+    }
 
     protected override void Move()
     {
+        if (!_acquiredTarget) return;
+        
         _isTargetInFieldOfView = Vector3.Dot(_monsterModelTransform.transform.forward,
             (_target.position - _monsterModelTransform.transform.position).normalized) > 0.2f;
 
@@ -149,15 +165,10 @@ public class MonsterController : MeleeBattleEntity
         _canChase = false;
     }
 
-    public override void ReceiveDamage(int damage)
-    {
-        base.ReceiveDamage(damage);
-        _canChase = false;
-    }
-
     protected override void Die()
     {
         base.Die();
+        
         _collider.enabled = false;
         _navMeshAgent.isStopped = true;
     }
@@ -201,6 +212,7 @@ public class MonsterController : MeleeBattleEntity
     private void FightingStateLogic()
     {
         _navMeshAgent.SetDestination(_target.position);
+        
         UpdateReachedTarget();
         
         if (_reachedTarget)
@@ -223,6 +235,8 @@ public class MonsterController : MeleeBattleEntity
 
     private void UpdateReachedTarget()
     {
+        if (_navMeshAgent.pathPending) return;
+        
         _reachedTarget = _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance;
     }
     
@@ -230,11 +244,6 @@ public class MonsterController : MeleeBattleEntity
     {
         _isTargetInFieldOfView = Vector3.Dot(_monsterModelTransform.transform.forward,
             (_target.position - _monsterModelTransform.transform.position).normalized) > 0.02f;
-    }
-
-    public void AssignCamera(Camera cam)
-    {
-        _camera = cam;
     }
 
     protected override bool HasNullReferences()

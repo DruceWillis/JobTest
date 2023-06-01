@@ -20,10 +20,13 @@ public class MainCanvas : MonoBehaviour
 
     public void Initialize(ScoreController scoreController)
     {
+        _scoreController = scoreController;
+
         GameStateController.Instance.OnGameStateChanged += OnGameStateChanged;
+        
         _screens.ForEach(s => (s.ScreenType == eScreenType.MainMenu ? (Action)s.Show : s.Hide)());
         _currentScreen = _screens.First(s => s.ScreenType == eScreenType.MainMenu);
-        _scoreController = scoreController;
+        
         var fightingScreen = _screens.First(s => s.ScreenType == eScreenType.Fighting) as FightingScreen;
         if (fightingScreen != null)
         {
@@ -42,6 +45,7 @@ public class MainCanvas : MonoBehaviour
     {
         var newColor = _blackOverlay.color;
         newColor.a = fadeIn ? 1 : 0;
+        
         DOTween.To(() => _blackOverlay.color, x => _blackOverlay.color = x, newColor, 1).OnComplete(() =>
         {
             action?.Invoke();

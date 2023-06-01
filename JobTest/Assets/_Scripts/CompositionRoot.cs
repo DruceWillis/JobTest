@@ -13,6 +13,7 @@ public class CompositionRoot : MonoBehaviour
     [SerializeField] private List<Transform> _monstersSpawnPositions;
     [SerializeField] private float _minRespawnRadius = 40f;
     [SerializeField] private float _maxRespawnRadius = 60f;
+    
     [SerializeField] private HealthOrb _healthOrbPrefab;
     
     private PlayerController _playerController;
@@ -28,6 +29,7 @@ public class CompositionRoot : MonoBehaviour
         if (HasNullReferences()) return;
 
         GameStateController.Instance.GameState = eGameState.MainMenu;
+        
         _scoreController = new ScoreController();
 
         _monstersManager = new MonsterManager(_monstersSpawnPositions,
@@ -50,15 +52,21 @@ public class CompositionRoot : MonoBehaviour
     private void OnOpenMainMenu()
     {
         _playerController.gameObject.SetActive(false);
-        _monstersManager.Restart();
-        _monstersManager.SetTarget(null);
+        
+        SetMonsterManagerTarget(null);
     }
 
     private void OnStartFighting()
     {
         HandlePlayerOnStartFighting();
+
+        SetMonsterManagerTarget(_playerController.transform);
+    }
+
+    private void SetMonsterManagerTarget(Transform target)
+    {
         _monstersManager.Restart();
-        _monstersManager.SetTarget(_playerController.transform);
+        _monstersManager.SetTarget(target);
     }
 
     private void HandlePlayerOnStartFighting()
@@ -67,6 +75,7 @@ public class CompositionRoot : MonoBehaviour
         {
             _playerController.transform.position = _playerSpawnPoint.position;
             _playerController.transform.rotation = _playerSpawnPoint.rotation;
+           
             _playerController.ResetValues();
             _playerController.gameObject.SetActive(true);
         }
@@ -75,10 +84,12 @@ public class CompositionRoot : MonoBehaviour
             var vikingBattleEntity = _battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Viking);
             _playerController = Instantiate(vikingBattleEntity.Prefab, _playerSpawnPoint.position, Quaternion.identity)
                 .GetComponent<PlayerController>();
+           
             _playerController.SetPlayerCamera(_cameraManager.Camera);
             _playerController.Initialize(vikingBattleEntity.Data);
             _playerController.OnHealthPercentChanged += _mainCanvas.FightingScreen.UpdateHealthBar;
             _playerController.OnDie += () => _monstersManager.SetTarget(null);
+            
             _initializedPlayer = true;
         }
     }

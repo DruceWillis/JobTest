@@ -38,6 +38,7 @@ public class CameraManager : MonoBehaviour
         _dollyCart.m_Position = 0f;
         _dollyCart.transform.position = _dollyCartOriginalPosition;
         _dollyCart.enabled = false;
+        
         _cinemachineBrain.enabled = false;
     }
 

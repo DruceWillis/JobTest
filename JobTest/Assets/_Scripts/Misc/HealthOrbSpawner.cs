@@ -11,6 +11,7 @@ public class HealthOrbSpawner
     {
         _healthOrbPrefab = healthOrbPrefab;
         _healthOrbs = new List<HealthOrb>();
+        
         GameStateController.Instance.OnGameStateChanged += state =>
         {
             if (state == eGameState.Fighting || state == eGameState.MainMenu)
@@ -33,6 +34,7 @@ public class HealthOrbSpawner
             orb = GameObject.Instantiate(_healthOrbPrefab, spawnPosition, Quaternion.identity);
             _healthOrbs.Add(orb);
         }
+        
         orb.LaunchOrb();
     }
 }

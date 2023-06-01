@@ -3,19 +3,20 @@ using UnityEngine;
 
 public abstract class BaseBattleEntity : MonoBehaviour
 {
-    public Action OnDie;
-    
     protected BattleEntityData _data;
-
     protected eBattleEntityType _entityType;
+    
     protected int _maxHealth;
     protected int _health;
     protected int _baseDamage;
+    
     protected bool _isDead;
     protected bool _successfullyInitialized;
     protected bool _receivedDamage;
     
     public Action<float, float> OnHealthPercentChanged;
+    public Action OnDie;
+
     public eBattleEntityType EntityType => _entityType;
     public bool IsFullHP => _health == _maxHealth;
     

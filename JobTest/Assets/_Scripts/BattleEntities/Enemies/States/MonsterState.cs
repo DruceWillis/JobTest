@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 public abstract class MonsterState
 {
@@ -19,7 +18,6 @@ public abstract class MonsterState
     
     public virtual void ExecuteState()
     {
-        // Debug.LogError(GetType().Name);
         _onExecute?.Invoke();
     }
 }   

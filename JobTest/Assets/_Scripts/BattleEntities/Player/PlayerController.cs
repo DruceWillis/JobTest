@@ -22,9 +22,6 @@ public class PlayerController : MeleeBattleEntity
     private float _horizontalMouseMovement;
     private bool _initiatedAttack;
 
-    // remove later
-    private bool RECEIVEDHIT;
-    
     public override void Initialize(BattleEntityData data)
     {
         base.Initialize(data);
@@ -78,6 +75,7 @@ public class PlayerController : MeleeBattleEntity
         _animatorController.ResetValues();
 
         if (!gameObject.activeSelf) return;
+        
         _animator.Rebind();
         _animator.Update(0f);
     }
@@ -85,22 +83,6 @@ public class PlayerController : MeleeBattleEntity
     public void SetPlayerCamera(Camera cam)
     {
         _camera = cam;
-    }
-
-    private void HandleInput()
-    {
-        // Movement
-        var normalizedDirection = _playerInputActions.Player.Movement.ReadValue<Vector2>().normalized;
-        var cameraBasedDirectionCorrection = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
-        _currentMovementDirection = cameraBasedDirectionCorrection * new Vector3(normalizedDirection.x, 0, normalizedDirection.y);
-
-        // Look around
-        _horizontalMouseMovement = _playerInputActions.Player.LookAround.ReadValue<Vector2>().x;
-
-        if (_playerInputActions.Player.Fire.WasPerformedThisFrame())
-        {
-            Attack();
-        }
     }
 
     protected override void Move()
@@ -135,8 +117,11 @@ public class PlayerController : MeleeBattleEntity
     {
         _rigidBody.velocity = Vector3.zero;
         _currentMovementDirection = Vector3.zero;
+        
         base.Die();
+        
         _cameraController.enabled = false;
+        
         GameStateController.Instance.GameState = eGameState.GameOver;
     }
 
@@ -145,13 +130,15 @@ public class PlayerController : MeleeBattleEntity
         Helpers.AnimatorUpdateData animatorUpdateData = new Helpers.AnimatorUpdateData
         {
             IsRunning = _currentMovementDirection.magnitude > 0.05f,
-            ReceivedHit = RECEIVEDHIT,
+            ReceivedHit = _receivedDamage,
             InitiatedAttack = _initiatedAttack,
             Died = _isDead
         };
+        
         _animatorController.Update(animatorUpdateData);
 
         _initiatedAttack = false;
+        _receivedDamage = false;
     }
     
     protected override bool HasNullReferences()
@@ -183,4 +170,19 @@ public class PlayerController : MeleeBattleEntity
         return false;
     }
 
+    private void HandleInput()
+    {
+        // Movement
+        var normalizedDirection = _playerInputActions.Player.Movement.ReadValue<Vector2>().normalized;
+        var cameraBasedDirectionCorrection = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
+        _currentMovementDirection = cameraBasedDirectionCorrection * new Vector3(normalizedDirection.x, 0, normalizedDirection.y);
+
+        // Look around
+        _horizontalMouseMovement = _playerInputActions.Player.LookAround.ReadValue<Vector2>().x;
+
+        if (_playerInputActions.Player.Fire.WasPerformedThisFrame())
+        {
+            Attack();
+        }
+    }
 }

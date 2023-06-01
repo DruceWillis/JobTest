@@ -14,8 +14,7 @@ public class BasicAnimatorController
     private static readonly int Die = Animator.StringToHash("Die");
 
     public bool CanAttack => _canAttack;
-
-
+    
     public BasicAnimatorController(Animator animator, bool usesUpperBodyMask)
     {
         _animator = animator;
@@ -62,7 +61,6 @@ public class BasicAnimatorController
         {
             // Using _animator.Play instead of SetTrigger to make it possible to restart
             // animation from the beginning with each hit taken 
-
             _animator.Play("ReceivedDamage", _usesUpperBodyMask ? 1 : 0, 0.0f);
         }
     }

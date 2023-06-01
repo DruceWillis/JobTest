@@ -4,6 +4,7 @@ public class WeaponController : MonoBehaviour
 {
     private Collider _collider;
     private WeaponData _data;
+    
     private int _holderBaseDamage;
 
     public void Initialize(WeaponData data, int holderBaseDamage, bool isTrigger = true)
@@ -18,6 +19,7 @@ public class WeaponController : MonoBehaviour
         {
             Debug.LogError("Weapon does not have a collider");
         }
+        
         _data = data;
         _holderBaseDamage = holderBaseDamage;
     }
@@ -30,6 +32,5 @@ public class WeaponController : MonoBehaviour
         {
             battleEntity.ReceiveDamage(_data.Damage + _holderBaseDamage);
         }
-        
     }
 }

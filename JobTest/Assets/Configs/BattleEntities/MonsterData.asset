@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: MonsterData
   m_EditorClassIdentifier: 
   _health: 1
-  _baseDamage: 4
+  _baseDamage: 0
   _weapon: {fileID: 11400000, guid: e5ebac42ab67a644ea4530fdf275af86, type: 2}
   _entityType: 1

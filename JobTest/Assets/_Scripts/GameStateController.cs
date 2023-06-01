@@ -2,15 +2,13 @@
 
 public class GameStateController
 {
-    public Action<eGameState> OnGameStateChanged;
-
     private static GameStateController _instance;
+    private eGameState _gameState;
+
+    public Action<eGameState> OnGameStateChanged;
 
     public static GameStateController Instance => _instance ??= new GameStateController();
 
-    private eGameState _gameState;
-
-    
     public eGameState GameState
     {
         get => _gameState;

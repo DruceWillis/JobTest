@@ -2,10 +2,10 @@
 
 public class ScoreController
 {
+    private int _currentScore;
+
     public Action OnStartedFighting;
     public Action<int> OnScoreChanged;
-    
-    private int _currentScore;
 
     public ScoreController()
     {

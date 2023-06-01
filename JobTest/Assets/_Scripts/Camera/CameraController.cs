@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
         _cachedTransform.rotation = Quaternion.identity;
     }
     
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (GameStateController.Instance.GameState != eGameState.Fighting) return;
         

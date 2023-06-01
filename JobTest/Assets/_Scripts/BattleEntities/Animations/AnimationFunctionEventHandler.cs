@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class AnimationFunctionEventHandler : MonoBehaviour
 {
-    public Action OnFinishedInPlaceAnimation;
-    public Action OnDie;
-    
     private BasicAnimatorController _animatorController;
     private List<Collider> _weaponColliders;
+
+    public Action OnFinishedInPlaceAnimation;
+    public Action OnDie;
 
     public void Initialize(BasicAnimatorController animatorController, ref List<Collider> colliders)
     {

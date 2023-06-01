@@ -17,6 +17,12 @@ public class MainMenuScreen : UIScreen
         EnableButtons(true);
     }
 
+    protected override void EnableButtons(bool enable)
+    {
+        _playButton.interactable = enable;
+        _exitButton.interactable = enable;
+    }
+
     private void OnPlayButtonClicked()
     {
         GameStateController.Instance.GameState = eGameState.Fighting;
@@ -25,12 +31,6 @@ public class MainMenuScreen : UIScreen
     private void OnExitButtonClicked()
     {
         Application.Quit();
-    }
-
-    protected override void EnableButtons(bool enable)
-    {
-        _playButton.interactable = enable;
-        _exitButton.interactable = enable;
     }
 
     private void OnDestroy()

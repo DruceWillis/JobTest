@@ -7,12 +7,14 @@ public class MonsterManager
 {
     private List<MonsterController> _monsters;
     private Dictionary<MonsterController, Transform> _monsterSpawnPointDictionary;
+    
+    private Transform _target;
 
     private Action _onMonsterDie;
 
-    private Transform _target;
     private float _minRespawnRadius;
     private float _maxRespawnRadius;
+    
     private float AllowedRadiusMargin => _maxRespawnRadius - _minRespawnRadius;
     
     public MonsterManager(List<Transform> spawnPositions, BattleEntity battleEntity, Camera camera, 
@@ -44,6 +46,7 @@ public class MonsterManager
     public void SetTarget(Transform target)
     {
         _target = target;
+        
         _monsters.ForEach(m =>
         {
             m.AssignTarget(_target);

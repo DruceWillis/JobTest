@@ -22,7 +22,8 @@ public class GameOverScreen : UIScreen
     public override void Show()
     {
         _buttonsContainer.localPosition = _slideFromPosition.localPosition;
-        _buttonsContainer.DOLocalMove(Vector3.zero, 2f)
+        _buttonsContainer
+            .DOLocalMove(Vector3.zero, 2f)
             .SetEase(Ease.InOutSine)
             .OnComplete(() => EnableButtons(true));
         
@@ -37,9 +38,10 @@ public class GameOverScreen : UIScreen
         _scoreText.text = score.ToString();
     }
 
-    private void Start()
+    protected override void EnableButtons(bool enable)
     {
-        EnableButtons(true);
+        _restartButton.interactable = enable;
+        _exitButton.interactable = enable;
     }
 
     private void OnRestartButtonClicked()
@@ -50,12 +52,6 @@ public class GameOverScreen : UIScreen
     private void OnExitButtonClicked()
     {
         GameStateController.Instance.GameState = eGameState.MainMenu;
-    }
-
-    protected override void EnableButtons(bool enable)
-    {
-        _restartButton.interactable = enable;
-        _exitButton.interactable = enable;
     }
 
     private void OnDestroy()
