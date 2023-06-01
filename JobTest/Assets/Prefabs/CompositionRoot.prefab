@@ -48,5 +48,5 @@ MonoBehaviour:
   _cameraManager: {fileID: 0}
   _playerSpawnPoint: {fileID: 0}
   _monstersSpawnPositions: []
-  _minRespawnRadius: 50
-  _maxRespawnRadius: 60
+  _minRespawnRadius: 20
+  _maxRespawnRadius: 30

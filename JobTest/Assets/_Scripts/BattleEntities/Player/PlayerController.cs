@@ -70,9 +70,15 @@ public class PlayerController : MeleeBattleEntity
     public override void ResetValues()
     {
         base.ResetValues();
-        _animatorController.ResetValues();
-        _cameraController.enabled = true;
         
+        _vikingModelTransform.localPosition = Vector3.zero;
+        _vikingModelTransform.rotation = Quaternion.identity;
+        
+        _cameraController.enabled = true;
+        _cameraController.ResetCameraPosition();
+
+        _animatorController.ResetValues();
+
         if (!gameObject.activeSelf) return;
         _animator.Rebind();
         _animator.Update(0f);

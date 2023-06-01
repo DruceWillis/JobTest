@@ -13,7 +13,7 @@ public class MonsterManager
     private Transform _target;
     private float _minRespawnRadius;
     private float _maxRespawnRadius;
-    private float RadiusStartingPercent => _minRespawnRadius / _maxRespawnRadius;
+    private float AllowedRadiusMargin => _maxRespawnRadius - _minRespawnRadius;
     
     public MonsterManager(List<Transform> spawnPositions, BattleEntity battleEntity, Action onMonsterDeath,
         float minRespawnRadius, float maxRespawnRadius)
@@ -68,9 +68,12 @@ public class MonsterManager
 
     private Vector3 GetRandomPositionInPlayerRadius()
     {
+        var randDirection = Random.insideUnitCircle.normalized;
+        var randomizedCenterPoint = randDirection * _minRespawnRadius 
+                              + AllowedRadiusMargin * 0.5f * randDirection;
         var randomPosition = new Vector2(_target.position.x, _target.position.z) 
-                             + Random.insideUnitCircle * (_maxRespawnRadius * RadiusStartingPercent);
-
+                             + randomizedCenterPoint + Random.insideUnitCircle * AllowedRadiusMargin;
+            
         var rayStartPosition = new Vector3(randomPosition.x, 1000, randomPosition.y);
         int rayCastDistance = (int)rayStartPosition.y + 500;
         
@@ -80,7 +83,6 @@ public class MonsterManager
             Debug.LogError("Something went wrong with raycast for new spawn position");
         }
         
-        // Debug.LogError(Vector3.Distance(hit.point, _target.position));
         return hit.point;
     }
 }

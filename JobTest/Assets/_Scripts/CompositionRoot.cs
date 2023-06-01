@@ -39,15 +39,6 @@ public class CompositionRoot : MonoBehaviour
         _cameraManager.Initialize(_mainCanvas);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            GameStateController.Instance.GameState = eGameState.MainMenu;
-        }
-    }
-    
-
     private void OnOpenMainMenu()
     {
         _playerController.gameObject.SetActive(false);

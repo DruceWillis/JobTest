@@ -11,9 +11,15 @@ public class CameraController : MonoBehaviour
     public void SetTarget(Transform target)
     {
         _cachedTransform = transform;
-
         _target = target;
-        _cachedTransform.position = target.position - _offset;
+        
+        ResetCameraPosition();
+    }
+
+    public void ResetCameraPosition()
+    {
+        _cachedTransform.position = _target.position - _offset;
+        _cachedTransform.rotation = Quaternion.identity;
     }
     
     void LateUpdate()
