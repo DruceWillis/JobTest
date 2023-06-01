@@ -15,7 +15,7 @@ public class MonsterManager
     private float _maxRespawnRadius;
     private float AllowedRadiusMargin => _maxRespawnRadius - _minRespawnRadius;
     
-    public MonsterManager(List<Transform> spawnPositions, BattleEntity battleEntity, Action onMonsterDeath,
+    public MonsterManager(List<Transform> spawnPositions, BattleEntity battleEntity, Action<Vector3> onMonsterDeath,
         float minRespawnRadius, float maxRespawnRadius)
     {
         _monsters = new List<MonsterController>();
@@ -25,7 +25,7 @@ public class MonsterManager
         {
             var monster = GameObject.Instantiate(battleEntity.Prefab, sp.position, Quaternion.identity).GetComponent<MonsterController>();
             monster.Initialize(battleEntity.Data);
-            monster.OnDie += onMonsterDeath;
+            monster.OnDie += () => onMonsterDeath?.Invoke(monster.transform.position + new Vector3(0, 1f, 0));
             monster.OnFinishedDieAnimation += () => ResetMonster(monster, true);
             _monsters.Add(monster.GetComponent<MonsterController>());
             _monsterSpawnPointDictionary.Add(monster, sp);

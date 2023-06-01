@@ -17,7 +17,8 @@ public abstract class BaseBattleEntity : MonoBehaviour
     
     public Action<float, float> OnHealthPercentChanged;
     public eBattleEntityType EntityType => _entityType;
-
+    public bool IsFullHP => _health == _maxHealth;
+    
     public virtual void Initialize(BattleEntityData data)
     {
         _data = data;

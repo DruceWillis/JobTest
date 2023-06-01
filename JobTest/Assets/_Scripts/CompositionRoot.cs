@@ -13,12 +13,14 @@ public class CompositionRoot : MonoBehaviour
     [SerializeField] private List<Transform> _monstersSpawnPositions;
     [SerializeField] private float _minRespawnRadius = 40f;
     [SerializeField] private float _maxRespawnRadius = 60f;
+    [SerializeField] private HealthOrb _healthOrbPrefab;
     
-    public MonsterManager _monstersManager;
-
     private PlayerController _playerController;
     private ScoreController _scoreController;
 
+    private MonsterManager _monstersManager;
+    private HealthOrbSpawner _healthOrbSpawner;
+    
     private bool _initializedPlayer;
     
     private void Awake()
@@ -30,7 +32,13 @@ public class CompositionRoot : MonoBehaviour
 
         _monstersManager = new MonsterManager(_monstersSpawnPositions,
             _battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Monster),
-            _scoreController.KilledMonster, _minRespawnRadius, _maxRespawnRadius);
+            orbSpawnPos =>
+            {
+                _scoreController.KilledMonster();
+                _healthOrbSpawner.SpawnHealthOrb(orbSpawnPos);
+            }, _minRespawnRadius, _maxRespawnRadius);
+
+        _healthOrbSpawner = new HealthOrbSpawner(_healthOrbPrefab);
         
         _mainCanvas.Initialize(_scoreController);
         _mainCanvas.OnOpenMainMenu += OnOpenMainMenu;

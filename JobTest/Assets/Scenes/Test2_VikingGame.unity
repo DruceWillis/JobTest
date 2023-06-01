@@ -375,6 +375,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1339475880474352, guid: 3b95be3def643d145ab1cf52aa0188a3, type: 3}
+      propertyPath: m_TagString
+      value: Terrain
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339475880474352, guid: 3b95be3def643d145ab1cf52aa0188a3, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 126
       objectReference: {fileID: 0}
@@ -1652,6 +1656,10 @@ PrefabInstance:
       propertyPath: _cameraManager
       value: 
       objectReference: {fileID: 264442445}
+    - target: {fileID: 1785677637208035703, guid: 372fde9c2fc221c4db5eab05c593df1f, type: 3}
+      propertyPath: _healthOrbPrefab
+      value: 
+      objectReference: {fileID: 6271542134842604225, guid: 10486fb212c1cce42975b6676a6c6a77, type: 3}
     - target: {fileID: 1785677637208035703, guid: 372fde9c2fc221c4db5eab05c593df1f, type: 3}
       propertyPath: _playerSpawnPoint
       value: 

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerCamera
   - Monster
+  - Terrain
   layers:
   - Default
   - TransparentFX
@@ -13,10 +14,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - Monster
   - Terrain
-  - 
+  - HealthOrb
   - 
   - 
   - 

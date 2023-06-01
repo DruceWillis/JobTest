@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
@@ -135,8 +133,9 @@ public class PlayerController : MeleeBattleEntity
 
     protected override void Die()
     {
-        base.Die();
         _rigidBody.velocity = Vector3.zero;
+        _currentMovementDirection = Vector3.zero;
+        base.Die();
         _cameraController.enabled = false;
         GameStateController.Instance.GameState = eGameState.GameOver;
     }
