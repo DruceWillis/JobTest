@@ -605,8 +605,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.16, z: 0.22}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.2302125, y: 0.5831016, z: 0.48710406}
+  m_Center: {x: 0.027774557, y: -0.024979014, z: 0.13354756}
 --- !u!114 &5627563573379930429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1303,6 +1303,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8452033479776415370}
   - component: {fileID: 3655834407256840308}
+  - component: {fileID: 3043053647904009702}
   m_Layer: 0
   m_Name: MonsterModel
   m_TagString: Untagged
@@ -1347,6 +1348,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3043053647904009702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9079387724443055152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d0fd45450a57554580bd67edb25a1b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9080304875049713550
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,41 +7,47 @@ public class MonsterController : MeleeBattleEntity
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private Transform _monsterModelTransform;
+    // [SerializeField] private float _speed = 4;
+    // [SerializeField] private float _acceleration = 30;
 
     private BasicAnimatorController _animatorController;
     private AnimationFunctionEventHandler _animationFunctionEventHandler;
 
-    private Rigidbody _rigidBody;
     private Collider _collider;
     private NavMeshAgent _navMeshAgent;
     private Transform _target;
 
-    private Vector3 _currentMovementDirection;
+    private MonsterState _currentState;
+    private MonsterIdleState _idleState;
+    private MonsterChaseState _chaseState;
+    private MonsterFightingState _fightingState;
+
+    private float _rotationTowardsTargetSpeed = 3f;
+    
     private bool _initiatedAttack;
     private bool _acquiredTarget;
     private bool _reachedTarget;
+    private bool _isTargetInFieldOfView;
+    private bool _canChase = true;
 
-    private void Awake()
+    public MonsterState CurrentState
     {
-        // base.Initialize(null);
-        
-        _animatorController = new BasicAnimatorController(_animator, false);
-        _entityType = eBattleEntityType.Monster;
-        _health = 2;
-        _animationFunctionEventHandler = _monsterModelTransform.GetComponent<AnimationFunctionEventHandler>();
+        get => _currentState;
+        set 
+        {
+            _currentState = value;
+            _currentState.OnEnteredState();
+        }
+    }
 
-        _rigidBody = GetComponent<Rigidbody>();
-        _collider = GetComponent<Collider>();
-        _navMeshAgent = GetComponent<NavMeshAgent>();
+    
+    private void Update()
+    {
+        if (!_successfullyInitialized || _isDead) return;
 
-        // InitializeWeaponControllers(_data.Weapon, _baseDamage, () =>
-        // {
-        //     _animationFunctionEventHandler.Initialize(_animatorController, ref _weaponColliders);
-        // });
-        
-        _successfullyInitialized = !HasNullReferences();
+        CurrentState.ExecuteState();
 
-        if (!_successfullyInitialized) return;
+        HandleAnimation();
     }
 
     public override void Initialize(BattleEntityData data)
@@ -51,8 +57,9 @@ public class MonsterController : MeleeBattleEntity
         _animatorController = new BasicAnimatorController(_animator, false);
 
         _animationFunctionEventHandler = _monsterModelTransform.GetComponent<AnimationFunctionEventHandler>();
-        
-        _rigidBody = GetComponent<Rigidbody>();
+        _animationFunctionEventHandler.OnDie = () => gameObject.SetActive(false);
+        _animationFunctionEventHandler.OnFinishedInPlaceAnimation = () => _canChase = true;
+
         _collider = GetComponent<Collider>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
 
@@ -60,6 +67,11 @@ public class MonsterController : MeleeBattleEntity
         {
             _animationFunctionEventHandler.Initialize(_animatorController, ref _weaponColliders);
         });
+        
+        _idleState = new MonsterIdleState(IdleStateLogic, OnEnteredIdleState);
+        _chaseState = new MonsterChaseState(ChaseStateLogic, OnEnteredChaseState);
+        _fightingState = new MonsterFightingState(FightingStateLogic, OnEnteredFightingState);
+        CurrentState = _idleState;
         
         _successfullyInitialized = !HasNullReferences();
 
@@ -71,7 +83,8 @@ public class MonsterController : MeleeBattleEntity
         base.ResetValues();
         _animatorController.ResetValues();
         _collider.enabled = true;
-        
+        _navMeshAgent.isStopped = false;
+
         if (!gameObject.activeSelf) return;
         _animator.Rebind();
         _animator.Update(0f);
@@ -81,66 +94,119 @@ public class MonsterController : MeleeBattleEntity
     {
         _target = target;
         _acquiredTarget = true;
+        CurrentState = _chaseState;
     }
 
-    private void Update()
-    {
-        if (!_successfullyInitialized || _isDead) return;
-
-        if (_acquiredTarget)
-        { 
-            Move();
-            Rotate();
-        }
-        else
-        {
-            var player = FindObjectOfType<PlayerController>();
-            if (player)
-            {
-                AssignTarget(player.transform);
-            }
-        }
-        
-        HandleAnimation();
-    }
 
     protected override void Move()
     {
-        _navMeshAgent.SetDestination(_target.position);
+        _isTargetInFieldOfView = Vector3.Dot(_monsterModelTransform.transform.forward,
+            (_target.position - _monsterModelTransform.transform.position).normalized) > 0.2f;
 
-        _reachedTarget = _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance;
+        Debug.LogError(_isTargetInFieldOfView);
+        _navMeshAgent.isStopped = !_isTargetInFieldOfView;
+        _navMeshAgent.SetDestination(_target.position);
+        
+        UpdateReachedTarget();
+        
+        if (_reachedTarget)
+        {
+            CurrentState = _fightingState;
+        }
     }
 
     protected override void Rotate()
     {
-        _monsterModelTransform.LookAt(_target);
+        _monsterModelTransform.transform.rotation = Quaternion.Slerp(_monsterModelTransform.transform.rotation,
+            Quaternion.LookRotation((_target.position - transform.position).normalized), Time.deltaTime * _rotationTowardsTargetSpeed);
     }
 
     protected override void Attack()
     {
-        // throw new System.NotImplementedException();
+        _initiatedAttack = true;
+        _canChase = false;
     }
-    
+
+    public override void ReceiveDamage(int damage)
+    {
+        base.ReceiveDamage(damage);
+        _canChase = false;
+    }
+
     protected override void Die()
     {
         base.Die();
         _collider.enabled = false;
+        _navMeshAgent.isStopped = true;
     }
 
     protected override void HandleAnimation()
     {
         Helpers.AnimatorUpdateData animatorUpdateData = new Helpers.AnimatorUpdateData
         {
-            IsRunning = !_reachedTarget,
+            IsRunning = !_reachedTarget && _acquiredTarget && _isTargetInFieldOfView,
             ReceivedHit = _receivedDamage,
             InitiatedAttack = _initiatedAttack,
             Died = _isDead
         };
+        
         _animatorController.Update(animatorUpdateData);
 
         _initiatedAttack = false;
         _receivedDamage = false;
     }
+
+    private void OnEnteredIdleState() { }
+    
+    private void IdleStateLogic() { }
+
+    private void OnEnteredChaseState() { }
+    
+    private void ChaseStateLogic()
+    {
+        Rotate();
+        Move();
+    }
+    
+    private void OnEnteredFightingState()
+    {
+        _navMeshAgent.isStopped = true;
+    }
+
+    private void FightingStateLogic()
+    {
+        _navMeshAgent.SetDestination(_target.position);
+        UpdateReachedTarget();
+        
+        if (_reachedTarget)
+        {
+            UpdateTargetInFieldOfView();
+            if (_isTargetInFieldOfView)
+            {
+                Attack();
+            }
+            else if (_animatorController.CanAttack)
+            {
+                Rotate();
+            }
+        }
+        else if (_canChase)
+        {
+            CurrentState = _chaseState;
+        }
+    }
+
+    private void UpdateReachedTarget()
+    {
+        _reachedTarget = _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance;
+    }
+    
+    private void UpdateTargetInFieldOfView()
+    {
+        _isTargetInFieldOfView = Vector3.Dot(_monsterModelTransform.transform.forward,
+            (_target.position - _monsterModelTransform.transform.position).normalized) > 0.02f;
+    }
+
 
     protected override bool HasNullReferences()
     {

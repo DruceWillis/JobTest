@@ -7,6 +7,9 @@ public class CompositionRoot : MonoBehaviour
     [SerializeField] private CameraManager _cameraManager;
     [SerializeField] private Transform _playerSpawnPoint;
     [SerializeField] private BattleEntitiesConfig _battleEntitiesConfig;
+    
+    // remove later
+    public MonsterController DEBUGMONSTER;
 
     private PlayerController _playerController;
 
@@ -23,6 +26,8 @@ public class CompositionRoot : MonoBehaviour
         _mainCanvas.OnStartFighting += OnStartFighting;
         
         _cameraManager.Initialize(_mainCanvas);
+        
+        DEBUGMONSTER.Initialize(_battleEntitiesConfig.GetBattleEntityByType(eBattleEntityType.Monster).Data);
     }
 
     private void Update()
@@ -41,6 +46,7 @@ public class CompositionRoot : MonoBehaviour
     private void OnStartFighting()
     {
         HandlePlayerOnStartFighting();
+        DEBUGMONSTER.AssignTarget(_playerController.transform);
     }
 
     private void HandlePlayerOnStartFighting()

@@ -12,8 +12,10 @@ public class BasicAnimatorController
     private static readonly int IsRunning = Animator.StringToHash("IsRunning");
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int Die = Animator.StringToHash("Die");
-    
-    
+
+    public bool CanAttack => _canAttack;
+
+
     public BasicAnimatorController(Animator animator, bool usesUpperBodyMask)
     {
         _animator = animator;
@@ -37,7 +39,6 @@ public class BasicAnimatorController
         if (data.Died)
         {
             _isDead = true;
-            Debug.LogError("dead");
             _animator.SetTrigger(Die);
         }
 

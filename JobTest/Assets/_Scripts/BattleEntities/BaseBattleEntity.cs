@@ -36,7 +36,6 @@ public abstract class BaseBattleEntity : MonoBehaviour
     {
         if (_isDead) return;
         
-        Debug.LogError(damage);
         _health -= damage;
         _health = _health < 0 ? 0 : _health;
         
@@ -49,7 +48,6 @@ public abstract class BaseBattleEntity : MonoBehaviour
         }
 
         _receivedDamage = true;
-        // OnReceivedDamage?.Invoke();
     }
     
     public virtual void ReceiveHeal(int healAmount)

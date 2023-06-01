@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class AnimationFunctionEventHandler : MonoBehaviour
 {
+    public Action OnFinishedInPlaceAnimation;
+    public Action OnDie;
+    
     private BasicAnimatorController _animatorController;
     private List<Collider> _weaponColliders;
 
@@ -25,5 +30,15 @@ public class AnimationFunctionEventHandler : MonoBehaviour
     public void DisableWeaponColliders()
     {
         _weaponColliders.ForEach(wc => wc.enabled = false);
+    }
+
+    public void FinishedInPlaceAnimation()
+    {
+        OnFinishedInPlaceAnimation?.Invoke();
+    }
+    
+    public void OnFinishedDieAnimation()
+    {
+        OnDie?.Invoke();
     }
 }

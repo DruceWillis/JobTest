@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d4c219c888401988d252e6822f162d, type: 3}
   m_Name: MonsterData
   m_EditorClassIdentifier: 
-  _health: 1
-  _baseDamage: 0
+  _health: 20
+  _baseDamage: 4
   _weapon: {fileID: 11400000, guid: e5ebac42ab67a644ea4530fdf275af86, type: 2}
   _entityType: 1
